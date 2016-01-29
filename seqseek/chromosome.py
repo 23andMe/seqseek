@@ -1,6 +1,6 @@
 import os
 
-from ttam.seqseeq.lib import BUILD37, BUILD38, get_data_directory, sorted_nicely
+from .lib import BUILD37, BUILD38, get_data_directory, sorted_nicely
 
 
 class MissingDataError(Exception):
@@ -10,31 +10,31 @@ class MissingDataError(Exception):
 class Chromosome(object):
 
     CHROMOSOME_LENGTHS = {
-        '1':	249250621,
-        '2':	243199373,
-        '3':	198022430,
-        '4':	191154276,
-        '5':	180915260,
-        '6':	171115067,
-        '7':	159138663,
-        '8':	146364022,
-        '9':	141213431,
-        '10':	135534747,
-        '11':	135006516,
-        '12':	133851895,
-        '13':	115169878,
-        '14':	107349540,
-        '15':	102531392,
-        '16':	90354753,
-        '17':	81195210,
-        '18':	78077248,
-        '19':	59128983,
-        '20':	63025520,
-        '21':	48129895,
-        '22':	51304566,
-        'X':	155270560,
-        'Y':	59373566,
-        'MT':   16571
+        '1': 249250621,
+        '2': 243199373,
+        '3': 198022430,
+        '4': 191154276,
+        '5': 180915260,
+        '6': 171115067,
+        '7': 159138663,
+        '8': 146364022,
+        '9': 141213431,
+        '10': 135534747,
+        '11': 135006516,
+        '12': 133851895,
+        '13': 115169878,
+        '14': 107349540,
+        '15': 102531392,
+        '16': 90354753,
+        '17': 81195210,
+        '18': 78077248,
+        '19': 59128983,
+        '20': 63025520,
+        '21': 48129895,
+        '22': 51304566,
+        'X':  155270560,
+        'Y':  59373566,
+        'MT': 16571
     }
 
     def __init__(self, chromosome_name, assembly=BUILD37):
@@ -55,7 +55,7 @@ class Chromosome(object):
         self.validate()
         self.length = self.CHROMOSOME_LENGTHS[self.name]
 
-    def validate(self, start, end):
+    def validate(self):
         if self.name not in self.CHROMOSOME_LENGTHS:
             raise ValueError("{name} is not a valid chromosome name!".format(self.name))
         if self.assembly not in (BUILD37, BUILD37):
@@ -84,17 +84,19 @@ class Chromosome(object):
 
     def path(self):
         data_dir = get_data_directory()
-        fasta_path = os.path.join(data_dir, BUILD37, self.filename())
-        if not os.path.exists(fasta_path):
-            raise MissingDataError(
-                '{} does not exist. Please download on the command line with: '
-                'seqseek download {}'.format(fasta_path, self.assembly))
-        return fasta_path
+        return os.path.join(data_dir, BUILD37, self.filename())
+
+    def exists(self):
+        return os.path.exists(self.path())
 
     def sequence(self, start, end):
         self.validate_coordinates(start, end)
         seq_length = end - start
 
+        if not self.exists():
+            raise MissingDataError(
+                '{} does not exist. Please download on the command line with: '
+                'seqseek download {}'.format(self.path(), self.assembly))
         with open(self.filename()) as fasta:
             # each file has a header like ">chr15" followed by a newline
             fasta.seek(start + len(">" + self.filename() + "\n"))

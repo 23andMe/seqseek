@@ -17,23 +17,27 @@ setup(
     name='seqseek',
     version='0.0',
     url='https://github.com/23andMe/seqseek',
-    author='Jon Elofson',
-    author_email='jelofson@23andme.com',
+    author='23andMe Engineering',
+    author_email=['jelofson@23andme.com', 'mstrand@23anmde.com'],
     description='Human reference sequences',
     long_description=readme,
+    #scripts=['scripts/seqseek_download.py'],
+    entry_points={'console_scripts': [
+            'downlaod_build_37 = seqseek.downloader:cmd_line',
+        ]},
     license='MIT',
     packages=find_packages(),
     include_package_data=True,
     install_requires=[''],
     classifiers=[
-        'Development Status :: 5 - Production/Stable',
-        'Intended Audience :: Developers',
+        #'Development Status :: 5 - Production/Stable',
+        'Intended Audience :: Human Genome Developers',
         'Operating System :: OS Independent',
         'License :: OSI Approved :: MIT License',
         'Programming Language :: Python',
         'Programming Language :: Python :: 2',
         'Programming Language :: Python :: 2.7',
-        'Programming Language :: Python :: 3',
-        'Programming Language :: Python :: 3.4'
+        #'Programming Language :: Python :: 3',
+        #'Programming Language :: Python :: 3.4'
     ]
 )

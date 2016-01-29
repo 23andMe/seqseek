@@ -1,35 +1,35 @@
-#!/usr/bin/env python
-
-import argparse
 import os
+import argparse
 import subprocess
-
-from ftplib import FTP
-
-from ttam.seqseek import Chromosome
-from ttam.seqseq.lib import get_data_directory
+import requests
+from lib import get_data_directory, URI
+from chromosome import Chromosome
 
 
-FASTA_PATH = os.path.join("ttam", "seqseek", "fastas")
-HOSTNAME = 'ftp.ensembl.org'
-FTPDIR = '/pub/grch37/release-83/fasta/homo_sapiens/dna'
+def cmd_line():
+    print 'begin cmd line'
+    parser = argparse.ArgumentParser(description='')
+    parser = argparse.ArgumentParser(description='')
+    parser.add_argument('-v', dest='verbose', action='store_true')
+    parser.add_argument('--uri', dest='uri', default=URI)
 
+    args = parser.parse_args()
+    uri = args.uri
+    verbosity = args.verbose
+    data_dir = get_data_directory()
 
-parser = argparse.ArgumentParser(description='')
-parser.add_argument('-v', '--verbose', dest='verbose', action='store_true')
-parser.add_argument('--host', dest='host', default=HOSTNAME)
-parser.add_argument('--path', dest='path', default=FTPDIR)
+    # Do it
+    Downloader(uri, data_dir, verbosity).download_chromosomes()
 
 
 class Downloader(object):
 
-    def __init__(self, host, path, data_dir, verbose):
-        self.host = host
-        self.path = path
-        self.verbose = verbose
+    def __init__(self, uri, data_dir, verbose):
+        self.uri = uri
         self.data_dir = data_dir
-        self.log('FTP: host is {}'.format(self.host))
-        self.log('FTP: writing to directory {}'.format(data_dir))
+        self.verbose = verbose
+        self.log('Data directory: {}'.format(data_dir))
+        self.log('Host: {}'.format(self.uri))
 
     def log(self, msg, force=False):
         if self.verbose or force:
@@ -42,58 +42,38 @@ class Downloader(object):
     def get_missing_chromosomes(self):
         missing_chromosomes = []
 
-        for chrom, length in Chromosome.sorted_chromosome_length_tuples:
-            filepath = Chromosome(chrom).path()
+        for name, length in Chromosome.sorted_chromosome_length_tuples():
+            chromosome = Chromosome(name)
+            filepath = chromosome.path()
 
             if not os.path.isfile(filepath):
-                missing_chromosomes.append(chrom)
-                continue
-
-            expected_size = length + len('>chr' + chrom + "\n") + 1
-            size = os.path.getsize(filepath)
-            if size != expected_size:
-                missing_chromosomes.append(chrom)
-                os.remove(filepath)
+                missing_chromosomes.append(name)
+            else:
+                expected_size = length + len('>chr' + name + "\n") + 1
+                size = os.path.getsize(filepath)
+                if size != expected_size:
+                    missing_chromosomes.append(name)
+                    os.remove(filepath)
 
         return missing_chromosomes
 
     def download_chromosomes(self):
         to_download = self.get_missing_chromosomes()
-        self.log("FTP: need to download {} chromosomes".format(len(to_download)))
+        self.log("Downloading {} chromosomes".format(len(to_download)))
 
-        if to_download:
-            ftp = FTP(HOSTNAME)
-            self.log("FTP: establishing connection with {}".format(HOSTNAME))
+        for name in to_download:
+            chromosome = Chromosome(name)
+            filename = chromosome.filename()
+            path = chromosome.path()
+            directory = os.path.dirname(chromosome.path())
+            if not os.path.isdir(directory):
+                os.makedirs(directory)
+                self.log('created directory {}'.format(directory))
+            fd = open(path, 'wb')
 
-            ftp.login()
-            self.log("FTP: connection established")
-
-            ftp.cwd(FTPDIR)
-            self.log("FTP: current directory is {}".format(ftp.pwd()))
-
-            for name in to_download:
-                chromosome = Chromosome(name)
-                filename = chromosome.filename()
-                path = os.path.join(self.data_dir, 'tmp_ensembl' + chromosome.filename)
-                handle = open(path, 'wb')
-
-                self.log("FTP: downloading {} to {}".format(filename, path))
-                ftp.retrbinary('RETR %s' % filename, handle.write)
-                self.log("FTP: {} COMPLETE".format(filename), True)
-
-            self.log("FTP: closing connection")
-            ftp.quit()
-            self.log("FTP: connection closed")
-
-            self.log("FASTA: post-processing files")
-            self.prep_fastas()
-            self.log("FASTA: post-processing complete")
-
-
-if __name__ == '__main__':
-    args = parser.parse_args()
-    host = args.host
-    path = args.path
-    verbose = args.verbose
-    data_dir = get_data_directory()
-    Downloader(host, path, data_dir, verbose).download_chromosomes()
+            self.log('Downloading {} to {}'.format(self.uri + chromosome.filename(), path))
+            r = requests.get(self.uri + chromosome.filename(), stream=True)
+            with open(filename, 'wb') as fd:
+                for chunk in r.iter_content(chunk_size=1024):
+                    fd.write(chunk)
+            self.log('Complete')
