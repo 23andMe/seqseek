@@ -30,7 +30,7 @@ setup(
     install_requires=[''],
     classifiers=[
         #'Development Status :: 5 - Production/Stable',
-        'Intended Audience :: Human Genome Developers',
+        'Intended Audience :: Developers',
         'Operating System :: OS Independent',
         'License :: OSI Approved :: MIT License',
         'Programming Language :: Python',
