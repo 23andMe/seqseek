@@ -97,7 +97,7 @@ class Chromosome(object):
             raise MissingDataError(
                 '{} does not exist. Please download on the command line with: '
                 'seqseek download {}'.format(self.path(), self.assembly))
-        with open(self.filename()) as fasta:
+        with open(self.path()) as fasta:
             # each file has a header like ">chr15" followed by a newline
             fasta.seek(start + len(">chr" + self.name + "\n"))
             return fasta.read(seq_length)
