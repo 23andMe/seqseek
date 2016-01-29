@@ -9,7 +9,6 @@ from chromosome import Chromosome
 def cmd_line():
     print 'begin cmd line'
     parser = argparse.ArgumentParser(description='')
-    parser = argparse.ArgumentParser(description='')
     parser.add_argument('-v', dest='verbose', action='store_true')
     parser.add_argument('--uri', dest='uri', default=URI)
 
@@ -66,11 +65,9 @@ class Downloader(object):
             if not os.path.isdir(directory):
                 os.makedirs(directory)
                 self.log('created directory {}'.format(directory))
-            fd = open(path, 'wb')
-
             self.log('Downloading {} to {}'.format(self.uri + chromosome.filename(), path))
             r = requests.get(self.uri + chromosome.filename(), stream=True)
-            with open(filename, 'wb') as fd:
+            with open(path, 'wb') as fd:
                 for chunk in r.iter_content(chunk_size=1024):
                     fd.write(chunk)
             self.log('Complete')
