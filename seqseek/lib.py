@@ -11,7 +11,7 @@ URI = 'https://s3-us-west-2.amazonaws.com/seqseek/homo_sapiens_GRCh37/'
 def get_data_directory():
     default = os.path.expanduser('~/.seqseek')
     storage_dir = os.environ.get(DATA_DIR_VARIABLE, default)
-    os.environ[DATA_DIR_VARIABLE] = storage_dir  # Used by prep_fastas
+    os.environ[DATA_DIR_VARIABLE] = storage_dir
     if not os.path.exists(storage_dir):
         os.makedirs(storage_dir)
     return storage_dir

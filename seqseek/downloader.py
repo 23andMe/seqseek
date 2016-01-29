@@ -36,9 +36,6 @@ class Downloader(object):
             print msg
         # TODO: add a log handler
 
-    def prep_fastas(self):
-        subprocess.call("./prep_fastas.sh", shell=True)
-
     def get_missing_chromosomes(self):
         missing_chromosomes = []
 
