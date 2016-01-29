@@ -58,7 +58,7 @@ class Chromosome(object):
     def validate(self):
         if self.name not in self.CHROMOSOME_LENGTHS:
             raise ValueError("{name} is not a valid chromosome name!".format(name=self.name))
-        if self.assembly not in (BUILD37, BUILD37):
+        if self.assembly not in (BUILD37, BUILD38):
             raise ValueError(
                 'Sorry, currently the only supported assemblies are {} and {}'.format(
                     BUILD37, BUILD38))
@@ -84,7 +84,7 @@ class Chromosome(object):
 
     def path(self):
         data_dir = get_data_directory()
-        return os.path.join(data_dir, BUILD37, self.filename())
+        return os.path.join(data_dir, self.assembly, self.filename())
 
     def exists(self):
         return os.path.exists(self.path())
