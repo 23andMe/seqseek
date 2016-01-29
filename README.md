@@ -13,6 +13,9 @@ Install
 -------
 ### pip
 ```bash
+
+TODO: GET THIS WORKING TODAY. Manual works for now. 
+
 $ pip install seqseek
 $ downlaod_build_37  -v
 ```
@@ -21,3 +24,4 @@ $ downlaod_build_37  -v
 1. Download seqseek from: https://github.com/23andMe/seqseek/archive/master.zip
 2. Unzip somewhere temporary
 3. Run `python setup.py install` (may have to prepend `sudo`)
+4. Install data: `downlaod_build_37  -v`
