@@ -34,7 +34,7 @@ class Chromosome(object):
         '22': 51304566,
         'X':  155270560,
         'Y':  59373566,
-        'MT': 16571
+        'M': 16571
     }
 
     def __init__(self, chromosome_name, assembly=BUILD37):
@@ -57,7 +57,7 @@ class Chromosome(object):
 
     def validate(self):
         if self.name not in self.CHROMOSOME_LENGTHS:
-            raise ValueError("{name} is not a valid chromosome name!".format(self.name))
+            raise ValueError("{name} is not a valid chromosome name!".format(name=self.name))
         if self.assembly not in (BUILD37, BUILD37):
             raise ValueError(
                 'Sorry, currently the only supported assemblies are {} and {}'.format(
@@ -99,5 +99,5 @@ class Chromosome(object):
                 'seqseek download {}'.format(self.path(), self.assembly))
         with open(self.filename()) as fasta:
             # each file has a header like ">chr15" followed by a newline
-            fasta.seek(start + len(">" + self.filename() + "\n"))
+            fasta.seek(start + len(">chr" + self.name + "\n"))
             return fasta.read(seq_length)
