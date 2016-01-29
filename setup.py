@@ -17,6 +17,7 @@ setup(
     name='seqseek',
     version='0.1',
     url='https://github.com/23andMe/seqseek',
+    download_url = 'https://github.com/23andMe/seqseek/tarball/0.1.2',
     author='23andMe Engineering',
     author_email=['jelofson@23andme.com', 'mstrand@23anmde.com'],
     description='Easy access to Build 37 & 38 Human reference sequences',
@@ -27,7 +28,7 @@ setup(
     license='MIT',
     packages=find_packages(),
     include_package_data=True,
-    install_requires=[''],
+    install_requires=['requests'],
     classifiers=[
         #'Development Status :: 5 - Production/Stable',
         'Intended Audience :: Developers',
