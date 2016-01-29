@@ -1,4 +1,4 @@
-SeqSeek (sequence seek) 
+SeqSeek
 =================
 Easy access to Homo sapiens NCBI Build 37 and 38 reference sequences
 
