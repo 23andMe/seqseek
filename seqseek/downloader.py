@@ -2,18 +2,23 @@ import os
 import argparse
 import subprocess
 import requests
-from lib import get_data_directory, URI
+from lib import get_data_directory, URI37, URI38, BUILD37, BUILD38
 from chromosome import Chromosome
 
+SUPPORTED_URIS = {
+    'download_build_37': URI37,
+    'download_build_38': URI38
+}
 
 def cmd_line():
-    print 'begin cmd line'
     parser = argparse.ArgumentParser(description='')
-    parser.add_argument('-v', dest='verbose', action='store_true')
-    parser.add_argument('--uri', dest='uri', default=URI)
-
+    parser.add_argument('-v', dest='verbose', action='store_true', default=True)
+    parser.add_argument('--uri', dest='uri', default=URI37)
     args = parser.parse_args()
-    uri = args.uri
+    if parser.prog in SUPPORTED_URIS.keys():
+        uri = SUPPORTED_URIS[parser.prog]
+    else:
+        uri = args.uri
     verbosity = args.verbose
     data_dir = get_data_directory()
 
@@ -23,12 +28,18 @@ def cmd_line():
 
 class Downloader(object):
 
+    SUPPORTED_ASSEMBLIES = {
+        URI37: BUILD37,
+        URI38: BUILD38
+    }
+
     def __init__(self, uri, data_dir, verbose):
         self.uri = uri
         self.data_dir = data_dir
         self.verbose = verbose
         self.log('Data directory: {}'.format(data_dir))
         self.log('Host: {}'.format(self.uri))
+        self.assembly = Downloader.SUPPORTED_ASSEMBLIES[self.uri]
 
     def log(self, msg, force=False):
         if self.verbose or force:
@@ -38,8 +49,8 @@ class Downloader(object):
     def get_missing_chromosomes(self):
         missing_chromosomes = []
 
-        for name, length in Chromosome.sorted_chromosome_length_tuples():
-            chromosome = Chromosome(name)
+        for name, length in Chromosome.sorted_chromosome_length_tuples(self.assembly):
+            chromosome = Chromosome(name, self.assembly)
             filepath = chromosome.path()
 
             if not os.path.isfile(filepath):
@@ -58,8 +69,9 @@ class Downloader(object):
         self.log("Downloading {} chromosomes".format(len(to_download)))
 
         for name in to_download:
-            chromosome = Chromosome(name)
+            chromosome = Chromosome(name, self.assembly)
             filename = chromosome.filename()
+            print chromosome.path()
             path = chromosome.path()
             directory = os.path.dirname(chromosome.path())
             if not os.path.isdir(directory):

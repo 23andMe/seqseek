@@ -1,6 +1,7 @@
 import os
 
-from .lib import BUILD37, BUILD38, get_data_directory, sorted_nicely
+from .lib import (BUILD37, BUILD38, get_data_directory, sorted_nicely,
+                 BUILD37_CHROMOSOMES, BUILD38_CHROMOSOMES)
 
 
 class MissingDataError(Exception):
@@ -9,32 +10,9 @@ class MissingDataError(Exception):
 
 class Chromosome(object):
 
-    CHROMOSOME_LENGTHS = {
-        '1': 249250621,
-        '2': 243199373,
-        '3': 198022430,
-        '4': 191154276,
-        '5': 180915260,
-        '6': 171115067,
-        '7': 159138663,
-        '8': 146364022,
-        '9': 141213431,
-        '10': 135534747,
-        '11': 135006516,
-        '12': 133851895,
-        '13': 115169878,
-        '14': 107349540,
-        '15': 102531392,
-        '16': 90354753,
-        '17': 81195210,
-        '18': 78077248,
-        '19': 59128983,
-        '20': 63025520,
-        '21': 48129895,
-        '22': 51304566,
-        'X':  155270560,
-        'Y':  59373566,
-        'M': 16571
+    ASSEMBLY_CHROMOSOMES = {
+        BUILD37: BUILD37_CHROMOSOMES,
+        BUILD38: BUILD38_CHROMOSOMES
     }
 
     def __init__(self, chromosome_name, assembly=BUILD37):
@@ -52,11 +30,12 @@ class Chromosome(object):
         """
         self.name = str(chromosome_name)
         self.assembly = assembly
+        self.chromosome_lengths = Chromosome.ASSEMBLY_CHROMOSOMES[self.assembly]
         self.validate()
-        self.length = self.CHROMOSOME_LENGTHS[self.name]
+        self.length = self.chromosome_lengths[self.name]
 
     def validate(self):
-        if self.name not in self.CHROMOSOME_LENGTHS:
+        if self.name not in self.chromosome_lengths.keys():
             raise ValueError("{name} is not a valid chromosome name!".format(name=self.name))
         if self.assembly not in (BUILD37, BUILD38):
             raise ValueError(
@@ -73,11 +52,12 @@ class Chromosome(object):
                 self.name, self.length))
 
     @classmethod
-    def sorted_chromosome_length_tuples(cls):
-        return sorted(cls.CHROMOSOME_LENGTHS.items(),
+    def sorted_chromosome_length_tuples(cls, assembly):
+        chromosome_lengths = cls.ASSEMBLY_CHROMOSOMES[assembly]
+        return sorted(chromosome_lengths.items(),
                       key=lambda pair:
                           sorted_nicely(
-                              Chromosome.CHROMOSOME_LENGTHS.keys()).index(pair[0]))
+                              chromosome_lengths.keys()).index(pair[0]))
 
     def filename(self):
        return 'chr{}.fa'.format(self.name)

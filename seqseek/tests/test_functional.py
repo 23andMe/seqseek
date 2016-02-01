@@ -3,7 +3,7 @@ import fnmatch
 
 from seqseek.chromosome import Chromosome
 
-from ..lib import get_data_directory
+from ..lib import get_data_directory, BUILD37_CHROMOSOMES, BUILD37
 
 from unittest import TestCase
 
@@ -16,7 +16,7 @@ class TestFiles(TestCase):
         self.assertEqual(file_count, 25)
 
     def test_file_names(self):
-        for name in Chromosome.CHROMOSOME_LENGTHS.keys():
+        for name in BUILD37_CHROMOSOMES.keys():
             fasta = os.path.join(TestFiles.GRCH37_PATH, "chr" + str(name) + ".fa")
             self.assertTrue(os.path.isfile(fasta))
 
@@ -48,7 +48,7 @@ class TestChromosomes(TestCase):
 
     def test_no_errors(self):
         Chromosome('1').path()
-        Chromosome('1').sorted_chromosome_length_tuples()
+        Chromosome('1').sorted_chromosome_length_tuples(assembly=BUILD37)
         Chromosome('1').filename()
 
     # all test sequences were extracted from https://genome.ucsc.edu/ using the
@@ -56,9 +56,9 @@ class TestChromosomes(TestCase):
 
     def test_chr_start_sequences(self):
         test_str = "N" * 20
-        for name in Chromosome.CHROMOSOME_LENGTHS.keys():
+        for name in BUILD37_CHROMOSOMES.keys():
             # these chromosomes do not have telomeres
-            if name == 'M'or name == '17':
+            if name == 'MT'or name == '17':
                 continue
             seq = Chromosome(name).sequence(0, 20)
             self.assertEqual(seq, test_str)
@@ -183,7 +183,7 @@ class TestChromosomes(TestCase):
         seq = Chromosome("Y").sequence(25325643, 25325663)
         self.assertEqual(expected_seq, seq)
 
-    def test_chrM_sequence(self):
-        expected_seq = "TATTGTACGGTACCATAAAT"
-        seq = Chromosome("M").sequence(16121, 16141)
+    def test_chrMT_sequence(self):
+        expected_seq = "ATTGTACGGTACCATAAATA"
+        seq = Chromosome("MT").sequence(16121, 16141)
         self.assertEqual(expected_seq, seq)
