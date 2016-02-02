@@ -56,7 +56,8 @@ class Downloader(object):
             if not os.path.isfile(filepath):
                 missing_chromosomes.append(name)
             else:
-                expected_size = length + len('>chr' + name + "\n") + 1
+                header_name = name if name != 'MT' else 'M'
+                expected_size = length + len(chromosome.header()) + 1
                 size = os.path.getsize(filepath)
                 if size != expected_size:
                     missing_chromosomes.append(name)

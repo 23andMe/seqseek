@@ -184,6 +184,6 @@ class TestChromosomes(TestCase):
         self.assertEqual(expected_seq, seq)
 
     def test_chrMT_sequence(self):
-        expected_seq = "ATTGTACGGTACCATAAATA"
+        expected_seq = "TATTGTACGGTACCATAAAT"
         seq = Chromosome("MT").sequence(16121, 16141)
         self.assertEqual(expected_seq, seq)

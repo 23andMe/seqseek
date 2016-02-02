@@ -69,6 +69,10 @@ class Chromosome(object):
     def exists(self):
         return os.path.exists(self.path())
 
+    def header(self):
+        header_name = self.name if self.name != 'MT' else 'M'
+        return ">chr" + header_name + "\n"
+
     def sequence(self, start, end):
         self.validate_coordinates(start, end)
         seq_length = end - start
@@ -79,5 +83,5 @@ class Chromosome(object):
                 'seqseek download {}'.format(self.path(), self.assembly))
         with open(self.path()) as fasta:
             # each file has a header like ">chr15" followed by a newline
-            fasta.seek(start + len(">chr" + self.name + "\n"))
+            fasta.seek(start + len(self.header()))
             return fasta.read(seq_length)
