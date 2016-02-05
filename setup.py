@@ -24,8 +24,10 @@ setup(
     long_description=readme,
     entry_points={'console_scripts': [
             'download_build_37 = seqseek.downloader:cmd_line',
-            'download_build_38 = seqseek.downloader:cmd_line'
-        ]},
+            'download_build_38 = seqseek.downloader:cmd_line',
+            'test_build_37 = seqseek.tests.build_specific_tests:test_build_37',
+            'test_build_38 = seqseek.tests.build_specific_tests:test_build_38'
+            ]},
     license='MIT',
     packages=find_packages(),
     include_package_data=True,

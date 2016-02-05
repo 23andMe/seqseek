@@ -5,8 +5,7 @@ import requests
 import unittest
 from lib import get_data_directory, URI37, URI38, BUILD37, BUILD38
 from chromosome import Chromosome
-from build_37_tests import TestBuild37
-from build_38_tests import TestBuild38
+from tests.build_specific_tests import run_build_test_suite
 
 SUPPORTED_URIS = {
     'download_build_37': URI37,
@@ -15,7 +14,7 @@ SUPPORTED_URIS = {
 
 def cmd_line():
     parser = argparse.ArgumentParser(description='')
-    parser.add_argument('-v', dest='verbose', action='store_true', default=True)
+    parser.add_argument('-v', dest='verbose', action='store_true')
     parser.add_argument('--uri', dest='uri', default=URI37)
     args = parser.parse_args()
     if parser.prog in SUPPORTED_URIS.keys():
@@ -36,11 +35,6 @@ class Downloader(object):
         URI38: BUILD38
     }
 
-    ASSEMBLY_TEST_SUITE = {
-        BUILD37: TestBuild37,
-        BUILD38: TestBuild38
-    }
-
     def __init__(self, uri, data_dir, verbose):
         self.uri = uri
         self.data_dir = data_dir
@@ -48,7 +42,6 @@ class Downloader(object):
         self.log('Data directory: {}'.format(data_dir))
         self.log('Host: {}'.format(self.uri))
         self.assembly = Downloader.SUPPORTED_ASSEMBLIES[self.uri]
-        self.test_suite = Downloader.ASSEMBLY_TEST_SUITE[self.assembly]
 
     def log(self, msg, force=False):
         if self.verbose or force:
@@ -94,5 +87,4 @@ class Downloader(object):
                     fd.write(chunk)
             self.log('Complete')
 
-        suite = unittest.TestLoader().loadTestsFromTestCase(self.test_suite)
-        unittest.TextTestRunner(verbosity=3).run(suite)
+        run_build_test_suite(self.assembly)

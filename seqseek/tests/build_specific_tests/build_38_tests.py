@@ -3,7 +3,7 @@ import fnmatch
 
 from seqseek.chromosome import Chromosome
 
-from lib import get_data_directory, BUILD38_CHROMOSOMES, BUILD38
+from seqseek.lib import get_data_directory, BUILD38_CHROMOSOMES, BUILD38
 
 from unittest import TestCase
 

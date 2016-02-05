@@ -74,7 +74,6 @@ def get_data_directory():
         os.makedirs(storage_dir)
     return storage_dir
 
-
 def sorted_nicely(l):
     """
     Sort the given iterable in the way that humans expect.
