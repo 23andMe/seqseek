@@ -10,7 +10,7 @@ from ..lib import get_data_directory, BUILD37, URI37
 from unittest import TestCase
 
 
-class TestChromosome(TestCase):
+class TestDataDirectory(TestCase):
 
     TEST_DATA_DIR = os.path.join('seqseek', 'tests', 'test_chromosomes')
 
@@ -20,6 +20,22 @@ class TestChromosome(TestCase):
     def test_get_data_directory(self):
         data_dir = get_data_directory()
         self.assertEqual(TestChromosome.TEST_DATA_DIR, data_dir)
+
+    def test_make_data_directory(self):
+        new_dir = os.path.join(TestChromosome.TEST_DATA_DIR, "test")
+        self.assertFalse(os.path.isdir(new_dir))
+        os.environ['DATA_DIR_VARIABLE'] = new_dir
+        get_data_directory()
+        self.assertTrue(os.path.isdir(new_dir))
+        os.rmdir(new_dir)
+
+
+class TestChromosome(TestCase):
+
+    TEST_DATA_DIR = os.path.join('seqseek', 'tests', 'test_chromosomes')
+
+    def setUp(self):
+        os.environ['DATA_DIR_VARIABLE'] = TestChromosome.TEST_DATA_DIR
 
     def test_invalid_assembly(self):
         with self.assertRaises(ValueError):
