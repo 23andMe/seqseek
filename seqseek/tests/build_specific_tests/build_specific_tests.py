@@ -10,6 +10,7 @@ ASSEMBLY_TEST_SUITE = {
 }
 
 def run_build_test_suite(assembly):
+    print "Running tests for {assembly}".format(assembly=assembly)
     suite = unittest.TestLoader().loadTestsFromTestCase(ASSEMBLY_TEST_SUITE[assembly])
     unittest.TextTestRunner(verbosity=3).run(suite)
 
