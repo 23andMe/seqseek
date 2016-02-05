@@ -33,8 +33,9 @@ modified - all newline characters have been removed from the fasta files to make
 retrieving sequences more simple.
 
 In these files, lower-case letters are used to represent repeating sequences. N's
-represent telomeric repeats. Every chromosome begins and ends with telomeric
-repeats, with the exception of chromosomes MT and 17.
+are used to represent any nucleotide (A, T, C, or G). With the exception of 
+chromosome MT (and chromosome 17 in Build 37), all of the chromosome files begin 
+and end with a long sequence of N's.
 
 
 ### Test Utilities
