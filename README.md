@@ -1,4 +1,4 @@
-SeqSeek
+SeqSeek [![Build Status](https://travis-ci.org/23andMe/seqseek.svg?branch=master)](https://travis-ci.org/23andMe/seqseek)
 =================
 Easy access to Homo sapiens NCBI Build 37 and 38 reference sequences.
 
