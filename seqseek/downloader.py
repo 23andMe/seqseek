@@ -2,8 +2,11 @@ import os
 import argparse
 import subprocess
 import requests
+import unittest
 from lib import get_data_directory, URI37, URI38, BUILD37, BUILD38
 from chromosome import Chromosome
+from build_37_tests import TestBuild37
+from build_38_tests import TestBuild38
 
 SUPPORTED_URIS = {
     'download_build_37': URI37,
@@ -33,6 +36,11 @@ class Downloader(object):
         URI38: BUILD38
     }
 
+    ASSEMBLY_TEST_SUITE = {
+        BUILD37: TestBuild37,
+        BUILD38: TestBuild38
+    }
+
     def __init__(self, uri, data_dir, verbose):
         self.uri = uri
         self.data_dir = data_dir
@@ -40,6 +48,7 @@ class Downloader(object):
         self.log('Data directory: {}'.format(data_dir))
         self.log('Host: {}'.format(self.uri))
         self.assembly = Downloader.SUPPORTED_ASSEMBLIES[self.uri]
+        self.test_suite = Downloader.ASSEMBLY_TEST_SUITE[self.assembly]
 
     def log(self, msg, force=False):
         if self.verbose or force:
@@ -84,3 +93,6 @@ class Downloader(object):
                 for chunk in r.iter_content(chunk_size=1024):
                     fd.write(chunk)
             self.log('Complete')
+
+        suite = unittest.TestLoader().loadTestsFromTestCase(self.test_suite)
+        unittest.TextTestRunner(verbosity=3).run(suite)

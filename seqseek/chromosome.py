@@ -30,17 +30,20 @@ class Chromosome(object):
         """
         self.name = str(chromosome_name)
         self.assembly = assembly
+        self.validate_assembly()
         self.chromosome_lengths = Chromosome.ASSEMBLY_CHROMOSOMES[self.assembly]
-        self.validate()
+        self.validate_name()
         self.length = self.chromosome_lengths[self.name]
 
-    def validate(self):
-        if self.name not in self.chromosome_lengths.keys():
-            raise ValueError("{name} is not a valid chromosome name!".format(name=self.name))
+    def validate_assembly(self):
         if self.assembly not in (BUILD37, BUILD38):
             raise ValueError(
-                'Sorry, currently the only supported assemblies are {} and {}'.format(
-                    BUILD37, BUILD38))
+            'Sorry, currently the only supported assemblies are {} and {}'.format(
+            BUILD37, BUILD38))
+
+    def validate_name(self):
+        if self.name not in self.chromosome_lengths.keys():
+            raise ValueError("{name} is not a valid chromosome name!".format(name=self.name))
 
     def validate_coordinates(self, start, end):
         if start < 0 or end < 0:
