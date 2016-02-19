@@ -1,16 +1,17 @@
 import os
 import argparse
-import subprocess
 import requests
-import unittest
+
 from lib import get_data_directory, URI37, URI38, BUILD37, BUILD38
 from chromosome import Chromosome
+
 from tests.build_specific_tests import run_build_test_suite
 
 SUPPORTED_URIS = {
     'download_build_37': URI37,
     'download_build_38': URI38
 }
+
 
 def cmd_line():
     parser = argparse.ArgumentParser(description='')
@@ -58,7 +59,6 @@ class Downloader(object):
             if not os.path.isfile(filepath):
                 missing_chromosomes.append(name)
             else:
-                header_name = name if name != 'MT' else 'M'
                 expected_size = length + len(chromosome.header()) + 1
                 size = os.path.getsize(filepath)
                 if size != expected_size:
@@ -73,13 +73,12 @@ class Downloader(object):
 
         for name in to_download:
             chromosome = Chromosome(name, self.assembly)
-            filename = chromosome.filename()
-            print chromosome.path()
+            self.log(chromosome.path())
             path = chromosome.path()
             directory = os.path.dirname(chromosome.path())
             if not os.path.isdir(directory):
                 os.makedirs(directory)
-                self.log('created directory {}'.format(directory))
+                self.log('created directory {}'.format(directory), True)
             self.log('Downloading {} to {}'.format(self.uri + chromosome.filename(), path))
             r = requests.get(self.uri + chromosome.filename(), stream=True)
             with open(path, 'wb') as fd:
