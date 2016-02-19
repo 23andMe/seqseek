@@ -66,6 +66,7 @@ BUILD38_CHROMOSOMES = {
     'MT':   16569
 }
 
+
 def get_data_directory():
     default = os.path.expanduser('~/.seqseek')
     storage_dir = os.environ.get('DATA_DIR_VARIABLE', default)
