@@ -15,9 +15,9 @@ elif PY3:
 
 setup(
     name='seqseek',
-    version='0.1.6',
+    version='0.1.10',
     url='https://github.com/23andMe/seqseek',
-    download_url = 'https://github.com/23andMe/seqseek/tarball/0.1.6',
+    download_url = 'https://github.com/23andMe/seqseek/tarball/0.1.10',
     author='23andMe Engineering',
     author_email=['jelofson@23andme.com', 'mstrand@23anmde.com'],
     description='Easy access to Build 37 & 38 human reference sequences',
@@ -35,7 +35,7 @@ setup(
     classifiers=[
         #'Development Status :: 5 - Production/Stable',
         'Intended Audience :: Developers',
-        'Operating System :: OS Independent',
+        # 'Operating System :: OS Independent',
         'License :: OSI Approved :: MIT License',
         'Programming Language :: Python',
         'Programming Language :: Python :: 2',
