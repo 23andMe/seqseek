@@ -18,8 +18,8 @@ $ pip install seqseek
 
 ### Download Utilities
 ```bash
-$ download_build_37 -v
-$ download_build_38 -v
+$ download_build_37 
+$ download_build_38 
 ```
 These commands check to see which chromosomes need to be downloaded for the
 specified build and initiate a download from our Amazon S3 bucket. Use

@@ -81,9 +81,10 @@ class Chromosome(object):
         seq_length = end - start
 
         if not self.exists():
+            build = '37' if self.assembly == BUILD37 else '38'
             raise MissingDataError(
                 '{} does not exist. Please download on the command line with: '
-                'seqseek download {}'.format(self.path(), self.assembly))
+                'download_build_{}'.format(self.path(), build))
         with open(self.path()) as fasta:
             # each file has a header like ">chr15" followed by a newline
             fasta.seek(start + len(self.header()))

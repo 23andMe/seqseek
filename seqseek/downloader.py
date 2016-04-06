@@ -78,12 +78,16 @@ class Downloader(object):
             directory = os.path.dirname(chromosome.path())
             if not os.path.isdir(directory):
                 os.makedirs(directory)
-                self.log('created directory {}'.format(directory), True)
-            self.log('Downloading {} to {}'.format(self.uri + chromosome.filename(), path))
+                self.log('Created directory {}'.format(directory), True)
+
+            self.log(
+                'Downloading {}{} to {}'.format(self.uri, chromosome.filename(), path),
+                 force=True)
+
             r = requests.get(self.uri + chromosome.filename(), stream=True)
             with open(path, 'wb') as fd:
                 for chunk in r.iter_content(chunk_size=1024):
                     fd.write(chunk)
-            self.log('Complete')
+            self.log('Complete', True)
 
         run_build_test_suite(self.assembly)
