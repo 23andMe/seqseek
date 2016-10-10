@@ -3,18 +3,18 @@ import fnmatch
 
 from seqseek.chromosome import Chromosome
 
-from seqseek.lib import get_data_directory, BUILD37_CHROMOSOMES, BUILD37
+from seqseek.lib import get_data_directory, BUILD37_CHROMOSOMES
 
 from unittest import TestCase
 
-# pragma: no cover
+
 class TestBuild37(TestCase):
 
     GRCH37_PATH = os.path.join(get_data_directory(), 'homo_sapiens_GRCh37')
 
     def test_file_count(self):
         file_count = len(fnmatch.filter(os.listdir(TestBuild37.GRCH37_PATH), '*.fa'))
-        self.assertEqual(file_count, 25)
+        self.assertEqual(file_count, 26)
 
     def test_file_names(self):
         for name in BUILD37_CHROMOSOMES.keys():
@@ -26,10 +26,11 @@ class TestBuild37(TestCase):
     # chromosome browser tool
 
     def test_chr_start_sequences(self):
+        exclude = ('MT', '17' , '6_cox_hap2')
         test_str = "N" * 20
         for name in BUILD37_CHROMOSOMES.keys():
             # these chromosomes do not have telomeres
-            if name == 'MT'or name == '17':
+            if name in exclude:
                 continue
             seq = Chromosome(name).sequence(0, 20)
             self.assertEqual(seq, test_str)
@@ -158,3 +159,20 @@ class TestBuild37(TestCase):
         expected_seq = "TATTGTACGGTACCATAAAT"
         seq = Chromosome("MT").sequence(16121, 16141)
         self.assertEqual(expected_seq, seq)
+
+    def test_chr6_cox_hap2(self):
+        expected_seq = "GATCCTGAGTGGGTGAGTGG"
+        seq = Chromosome("6_cox_hap2").sequence(3065395, 3065415)
+        self.assertEqual(expected_seq, seq)
+
+        expected_seq = "TATTCTTGCCAATAT"
+        seq = Chromosome("6_cox_hap2").sequence(200, 215).upper()
+        self.assertEqual(expected_seq, seq)
+
+        expected_seq = "TCTGGCCTGGGAGTC"
+        seq = Chromosome("6_cox_hap2").sequence(0, 15).upper()
+        self.assertEqual(expected_seq, seq)
+
+        expected = "tc"
+        seq = Chromosome('6_cox_hap2').sequence(4795369, BUILD37_CHROMOSOMES['6_cox_hap2'])
+        self.assertEqual(expected, seq)

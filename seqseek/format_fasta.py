@@ -16,6 +16,11 @@ def run(path):
         formatted.write(first_line)
         formatted.write(clean)
 
+    with open(path + '.seqseek') as done:
+        done.readline()
+        sequence = done.read()
+        print "Length is %d" % len(sequence)
+
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()

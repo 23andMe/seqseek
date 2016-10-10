@@ -43,7 +43,7 @@ class Chromosome(object):
 
     def validate_name(self):
         if self.name not in self.chromosome_lengths.keys():
-            raise ValueError("{name} is not a valid chromosome name!".format(name=self.name))
+            raise ValueError("{name} is not a valid chromosome name".format(name=self.name))
 
     def validate_coordinates(self, start, end):
         if start < 0 or end < 0:
@@ -85,6 +85,7 @@ class Chromosome(object):
             raise MissingDataError(
                 '{} does not exist. Please download on the command line with: '
                 'download_build_{}'.format(self.path(), build))
+
         with open(self.path()) as fasta:
             # each file has a header like ">chr15" followed by a newline
             fasta.seek(start + len(self.header()))

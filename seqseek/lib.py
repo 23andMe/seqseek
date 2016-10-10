@@ -4,37 +4,42 @@ import os
 
 BUILD37 = 'homo_sapiens_GRCh37'
 BUILD38 = 'homo_sapiens_GRCh38'
+
+DEFAULT_DATA_DIR = '~/.seqseek'
 DATA_DIR_VARIABLE = 'SEQSEEK_DATA_DIR'
+
 URI37 = 'https://s3-us-west-2.amazonaws.com/seqseek/homo_sapiens_GRCh37/'
 URI38 = 'https://s3-us-west-2.amazonaws.com/seqseek/homo_sapiens_GRCh38/'
 
 # chromosome names and lengths for build 37
 BUILD37_CHROMOSOMES = {
-        '1': 249250621,
-        '2': 243199373,
-        '3': 198022430,
-        '4': 191154276,
-        '5': 180915260,
-        '6': 171115067,
-        '7': 159138663,
-        '8': 146364022,
-        '9': 141213431,
-        '10': 135534747,
-        '11': 135006516,
-        '12': 133851895,
-        '13': 115169878,
-        '14': 107349540,
-        '15': 102531392,
-        '16': 90354753,
-        '17': 81195210,
-        '18': 78077248,
-        '19': 59128983,
-        '20': 63025520,
-        '21': 48129895,
-        '22': 51304566,
-        'X':  155270560,
-        'Y':  59373566,
-        'MT':  16571
+    '1': 249250621,
+    '2': 243199373,
+    '3': 198022430,
+    '4': 191154276,
+    '5': 180915260,
+    '6': 171115067,
+    '7': 159138663,
+    '8': 146364022,
+    '9': 141213431,
+    '10': 135534747,
+    '11': 135006516,
+    '12': 133851895,
+    '13': 115169878,
+    '14': 107349540,
+    '15': 102531392,
+    '16': 90354753,
+    '17': 81195210,
+    '18': 78077248,
+    '19': 59128983,
+    '20': 63025520,
+    '21': 48129895,
+    '22': 51304566,
+    'X':  155270560,
+    'Y':  59373566,
+    'MT':  16571,
+    '6_cox_hap2': 4795371
+
 }
 
 # chromosome names and lengths for build 38
@@ -68,12 +73,13 @@ BUILD38_CHROMOSOMES = {
 
 
 def get_data_directory():
-    default = os.path.expanduser('~/.seqseek')
+    default = os.path.expanduser(DEFAULT_DATA_DIR)
     storage_dir = os.environ.get('DATA_DIR_VARIABLE', default)
     os.environ[DATA_DIR_VARIABLE] = storage_dir
     if not os.path.exists(storage_dir):
         os.makedirs(storage_dir)
     return storage_dir
+
 
 def sorted_nicely(l):
     """

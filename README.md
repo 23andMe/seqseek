@@ -2,8 +2,8 @@ SeqSeek [![Build Status](https://travis-ci.org/23andMe/seqseek.svg?branch=master
 =================
 Easy access to Homo sapiens NCBI Build 37 and 38 reference sequences.
 
-This package calls open(file).seek(range) on FASTA files of ASCII to provide
-ranges of sequence strings. It is exactly as fast as your disk, for better or worse.
+This package calls open(file).seek(range) on FASTA files of ASCII characters to provide
+ranges of sequence strings. It is exactly as fast as your disk, for better or worse. 
 
 Requirements
 ------------
@@ -64,4 +64,4 @@ from seqseek import Chromosome, BUILD38
 Chromosome(17, assembly=BUILD38).sequence(start=141224, end=141244) #=> ACCTGGTGAGGGGACATGGG
 ```
 Build 37 is the default. You can specify another build with the assembly option,
-as shown above.
+as shown above. 
