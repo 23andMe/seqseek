@@ -41,6 +41,7 @@ BUILD37_CHROMOSOMES = {
     '6_cox_hap2': 4795371,
     '6_apd_hap1': 4622290,
     '6_ssto_hap7': 4928567,
+    '6_mcf_hap5': 4833398,
 }
 
 # chromosome names and lengths for build 38
