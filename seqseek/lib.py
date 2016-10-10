@@ -38,8 +38,8 @@ BUILD37_CHROMOSOMES = {
     'X':  155270560,
     'Y':  59373566,
     'MT':  16571,
-    '6_cox_hap2': 4795371
-
+    '6_cox_hap2': 4795371,
+    '6_apd_hap1': 4622290
 }
 
 # chromosome names and lengths for build 38
