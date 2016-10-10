@@ -46,6 +46,7 @@ BUILD37_CHROMOSOMES = {
     '6_mcf_hap5': 4833398,
     '6_qbl_hap6': 4611984,
     '6_ssto_hap7': 4928567,
+    '6_dbb_hap3': 4610396,
 }
 
 # chromosome names and lengths for build 38
