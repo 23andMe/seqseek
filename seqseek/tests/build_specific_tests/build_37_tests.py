@@ -14,7 +14,7 @@ class TestBuild37(TestCase):
 
     def test_file_count(self):
         file_count = len(fnmatch.filter(os.listdir(TestBuild37.GRCH37_PATH), '*.fa'))
-        self.assertEqual(file_count, 26)
+        self.assertEqual(file_count, 27)
 
     def test_file_names(self):
         for name in BUILD37_CHROMOSOMES.keys():
@@ -26,7 +26,7 @@ class TestBuild37(TestCase):
     # chromosome browser tool
 
     def test_chr_start_sequences(self):
-        exclude = ('MT', '17' , '6_cox_hap2')
+        exclude = ('MT', '17' , '6_cox_hap2', '6_apd_hap1')
         test_str = "N" * 20
         for name in BUILD37_CHROMOSOMES.keys():
             # these chromosomes do not have telomeres
@@ -175,4 +175,18 @@ class TestBuild37(TestCase):
 
         expected = "tc"
         seq = Chromosome('6_cox_hap2').sequence(4795369, BUILD37_CHROMOSOMES['6_cox_hap2'])
+        self.assertEqual(expected, seq)
+
+    def test_chr6_apd_hap1(self):
+        expected = "GAATTCAGCTCGCCGACGGC"
+        seq = Chromosome('6_apd_hap1').sequence(0, 20)
+        self.assertEqual(expected, seq)
+
+        expected = "ACAATTAGAAATACTAGGAG"
+        seq = Chromosome('6_apd_hap1').sequence(3000, 3020)
+        self.assertEqual(expected, seq)
+
+        expected = "cacT"
+        seq = Chromosome('6_apd_hap1').sequence(BUILD37_CHROMOSOMES['6_apd_hap1'] - 4,
+                                                BUILD37_CHROMOSOMES['6_apd_hap1'])
         self.assertEqual(expected, seq)
