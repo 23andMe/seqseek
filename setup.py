@@ -15,11 +15,11 @@ elif PY3:
 
 setup(
     name='seqseek',
-    version='0.1.10',
+    version='0.2.0',
     url='https://github.com/23andMe/seqseek',
     download_url = 'https://github.com/23andMe/seqseek/tarball/0.1.10',
     author='23andMe Engineering',
-    author_email=['jelofson@23andme.com', 'mstrand@23anmde.com'],
+    author_email=['mstrand@23anmde.com'],
     description='Easy access to Build 37 & 38 human reference sequences',
     long_description=readme,
     entry_points={'console_scripts': [

@@ -6,7 +6,7 @@ script: tox
 deploy:
   provider: pypi
   distributions: sdist
-  user: blopker
+  user: mstrand
   on:
     tags: true
   password:
