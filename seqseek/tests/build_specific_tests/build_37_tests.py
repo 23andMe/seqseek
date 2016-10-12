@@ -240,3 +240,15 @@ class TestBuild37(TestCase):
         expected = 'CATCACGATGGATCACAGGT'
         seq = Chromosome('MT').sequence(mito_length - 10, mito_length + 10, loop=True)
         self.assertEqual(expected, seq)
+
+    def test_mito_N(self):
+        """
+        From mitomap:
+            *3107del is maintained in this revised sequence with the gap
+            represented by an 'N'. THIS ALLOWS HISTORICAL NUCLEOTIDE NUMBERING TO
+            BE MAINTAINED.
+
+        We remove this 'N' base since it is only present to preserve numbering and is
+        not actually part of the observed sequence.
+        """
+        self.assertEqual('', Chromosome('MT').sequence(3106, 3107))

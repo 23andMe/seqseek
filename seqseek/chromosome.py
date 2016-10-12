@@ -2,7 +2,7 @@ import os
 
 from .exceptions import TooManyLoops, MissingDataError
 from .lib import (BUILD37, BUILD38, get_data_directory, sorted_nicely,
-                 BUILD37_ACCESSIONS, BUILD38_ACCESSIONS, ACCESSION_LENGTHS)
+                 BUILD37_ACCESSIONS, BUILD38_ACCESSIONS, ACCESSION_LENGTHS, RCRS_ACCESSION)
 
 
 class Chromosome(object):
@@ -106,4 +106,13 @@ class Chromosome(object):
             raise MissingDataError(
                 '{} does not exist. Please download on the command line with: '
                 'download_build_{}'.format(self.path(), build))
-        return ''.join([self.read(*read) for read in reads])
+
+        sequence = ''.join([self.read(*read) for read in reads])
+
+        # The rCRS mito contig contains an 'N' base at position 3107 to preserve legacy
+        # nucleotide numbering. We remove it because it is not part of the observed
+        # sequence. See http://www.mitomap.org/MITOMAP/HumanMitoSeq
+        if self.accession == RCRS_ACCESSION:
+            sequence = sequence.replace('N', '')
+
+        return sequence

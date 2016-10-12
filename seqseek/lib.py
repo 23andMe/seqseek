@@ -5,6 +5,8 @@ import os
 BUILD37 = 'homo_sapiens_GRCh37'
 BUILD38 = 'homo_sapiens_GRCh38'
 
+RCRS_ACCESSION = 'NC_012920.1'
+
 DEFAULT_DATA_DIR = '~/.seqseek'
 DATA_DIR_VARIABLE = 'SEQSEEK_DATA_DIR'
 
