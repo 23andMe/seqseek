@@ -51,7 +51,9 @@ class Chromosome(object):
             raise ValueError('Loop may only be specified for the mitochondria.')
 
     def validate_coordinates(self, start, end):
-        if (start < 0 and not self.loop) or end < 0:
+        if end < 0:
+            raise ValueError('end must be a positive number')
+        elif (start < 0 and not self.loop) or end < 0:
             raise ValueError("Start and end must be positive integers for this chromosome")
         if end < start:
             raise ValueError("Start position cannot be greater than end position")
@@ -101,7 +103,7 @@ class Chromosome(object):
         if self.loop and end > self.length:
             reads = [(start, self.length - start), (0, end - self.length)]
         elif self.loop and start < 0:
-            reads = [(self.length + start, self.length + start), (0, end)]
+            reads = [(self.length + start, abs(start)), (0, end)]
         else:
             reads = [(start, end - start)]
 
