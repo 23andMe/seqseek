@@ -1,9 +1,9 @@
 import os
 from unittest import TestCase
 
+from seqseek.exceptions import TooManyLoops
 from seqseek.chromosome import Chromosome, MissingDataError
 from seqseek.lib import get_data_directory, BUILD37, BUILD37_CHROMOSOMES
-
 
 
 class TestDataDirectory(TestCase):
@@ -69,18 +69,29 @@ class TestChromosome(TestCase):
         seq = Chromosome('MT').sequence(5, 10)
         self.assertEqual(seq, expected_seq)
 
-    def test_circular_mito(self):
-        """
-        the mitochondria is circular and can optionally support looping around when
-        the end position exceeds the length of the contig
-        """
+    def test_mito_loop_end(self):
         expected_seq = 'CTATCACCCTGATCACAGGT'
+
         seq = Chromosome('MT').sequence(10, 30, loop=True)
+        self.assertEqual(seq, expected_seq)
+
+        seq = Chromosome('MT').sequence(-10, 10, loop=True)
         self.assertEqual(seq, expected_seq)
 
     def test_others_are_not_circular(self):
         with self.assertRaises(ValueError):
             Chromosome(1).sequence(0, 1, loop=True)
+
+    def test_too_many_loops(self):
+        """should never return a sequence longer than the length of the contig"""
+        Chromosome('MT').sequence(0, BUILD37_CHROMOSOMES['MT'], loop=True)
+        with self.assertRaises(TooManyLoops):
+            Chromosome('MT').sequence(0, BUILD37_CHROMOSOMES['MT'] + 1, loop=True)
+
+        Chromosome('MT').sequence(-1, BUILD37_CHROMOSOMES['MT'] - 1, loop=True)
+        with self.assertRaises(TooManyLoops):
+            Chromosome('MT').sequence(-1, BUILD37_CHROMOSOMES['MT'], loop=True)
+
 
 class TestInvalidQueries(TestCase):
 

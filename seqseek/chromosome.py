@@ -1,5 +1,6 @@
 import os
 
+from .exceptions import TooManyLoops
 from .lib import (BUILD37, BUILD38, get_data_directory, sorted_nicely,
                  BUILD37_CHROMOSOMES, BUILD38_CHROMOSOMES)
 
@@ -48,13 +49,15 @@ class Chromosome(object):
     def validate_coordinates(self, start, end, loop=False):
         if loop and self.name != 'MT':
             raise ValueError('Loop may only be specified for the mitochondria.')
-        if start < 0 or end < 0:
-            raise ValueError("Start and end must be positive integers")
+        if (start < 0 and not loop) or end < 0:
+            raise ValueError("Start and end must be positive integers for this chromosome")
         if end < start:
             raise ValueError("Start position cannot be greater than end position")
         if start > self.length or (end > self.length and not loop):
             raise ValueError('Coordinates out of bounds. Chr {} has {} bases.'.format(
                 self.name, self.length))
+        if loop and end - start > self.length:
+            raise TooManyLoops()
 
     @classmethod
     def sorted_chromosome_length_tuples(cls, assembly):
@@ -88,8 +91,9 @@ class Chromosome(object):
         self.validate_coordinates(start, end, loop=loop)
 
         if loop and end > self.length:
-            # deal with looping around circular mito
             reads = [(start, self.length - start), (0, end - self.length)]
+        elif loop and start < 0:
+            reads = [(self.length + start, self.length + start), (0, end)]
         else:
             reads = [(start, end - start)]
 
@@ -98,5 +102,4 @@ class Chromosome(object):
             raise MissingDataError(
                 '{} does not exist. Please download on the command line with: '
                 'download_build_{}'.format(self.path(), build))
-
         return ''.join([self.read(*read) for read in reads])
