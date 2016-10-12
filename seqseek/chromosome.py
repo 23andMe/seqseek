@@ -63,7 +63,7 @@ class Chromosome(object):
         name_to_accession = cls.ASSEMBLY_CHROMOSOMES[assembly]
         chromosome_length_tuples = []
         for name, accession in name_to_accession.items():
-            if name in name_to_accession and accession in ACCESSION_LENGTHS:
+            if accession in ACCESSION_LENGTHS:
                 chromosome_length_tuples.append((name, ACCESSION_LENGTHS[accession]))
 
         return sorted(chromosome_length_tuples,
