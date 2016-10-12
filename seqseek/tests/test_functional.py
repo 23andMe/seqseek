@@ -1,13 +1,9 @@
 import os
-import fnmatch
-
-from shutil import copyfile, rmtree
-
-from seqseek.chromosome import Chromosome, MissingDataError
-
-from ..lib import get_data_directory, BUILD37, URI37
-
 from unittest import TestCase
+
+from seqseek.exceptions import TooManyLoops
+from seqseek.chromosome import Chromosome, MissingDataError
+from seqseek.lib import get_data_directory, BUILD37, BUILD37_CHROMOSOMES
 
 
 class TestDataDirectory(TestCase):
@@ -35,7 +31,12 @@ class TestChromosome(TestCase):
     TEST_DATA_DIR = os.path.join('seqseek', 'tests', 'test_chromosomes')
 
     def setUp(self):
+        self._mt_length = BUILD37_CHROMOSOMES['MT']
         os.environ['DATA_DIR_VARIABLE'] = TestChromosome.TEST_DATA_DIR
+        BUILD37_CHROMOSOMES['MT'] = 20
+
+    def tearDown(self):
+        BUILD37_CHROMOSOMES['MT'] = self._mt_length
 
     def test_invalid_assembly(self):
         with self.assertRaises(ValueError):
@@ -67,6 +68,29 @@ class TestChromosome(TestCase):
         expected_seq = 'CAGGT'
         seq = Chromosome('MT').sequence(5, 10)
         self.assertEqual(seq, expected_seq)
+
+    def test_mito_loop_end(self):
+        expected_seq = 'CTATCACCCTGATCACAGGT'
+
+        seq = Chromosome('MT').sequence(10, 30, loop=True)
+        self.assertEqual(seq, expected_seq)
+
+        seq = Chromosome('MT').sequence(-10, 10, loop=True)
+        self.assertEqual(seq, expected_seq)
+
+    def test_others_are_not_circular(self):
+        with self.assertRaises(ValueError):
+            Chromosome(1).sequence(0, 1, loop=True)
+
+    def test_too_many_loops(self):
+        """should never return a sequence longer than the length of the contig"""
+        Chromosome('MT').sequence(0, BUILD37_CHROMOSOMES['MT'], loop=True)
+        with self.assertRaises(TooManyLoops):
+            Chromosome('MT').sequence(0, BUILD37_CHROMOSOMES['MT'] + 1, loop=True)
+
+        Chromosome('MT').sequence(-1, BUILD37_CHROMOSOMES['MT'] - 1, loop=True)
+        with self.assertRaises(TooManyLoops):
+            Chromosome('MT').sequence(-1, BUILD37_CHROMOSOMES['MT'], loop=True)
 
 
 class TestInvalidQueries(TestCase):

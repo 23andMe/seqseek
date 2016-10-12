@@ -231,3 +231,9 @@ class TestBuild37(TestCase):
         expected = "TTTTGGCTACAATAATTCTT"
         seq = Chromosome('17_ctg5_hap1').sequence(3000, 3020)
         self.assertEqual(expected, seq)
+
+    def test_looped_mito(self):
+        mito_length = BUILD37_CHROMOSOMES['MT']
+        expected = 'CATCACGATGGATCACAGGT'
+        seq = Chromosome('MT').sequence(mito_length - 10, mito_length + 10, loop=True)
+        self.assertEqual(expected, seq)

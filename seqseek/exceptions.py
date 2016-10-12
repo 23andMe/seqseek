@@ -1,0 +1,2 @@
+class TooManyLoops(Exception):
+    pass

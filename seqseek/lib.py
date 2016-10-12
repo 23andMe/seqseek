@@ -37,7 +37,7 @@ BUILD37_CHROMOSOMES = {
     '22': 51304566,
     'X':  155270560,
     'Y':  59373566,
-    'MT':  16571,
+    'MT': 16571,
 
     # Haplotype contigs
     '6_apd_hap1': 4622290,

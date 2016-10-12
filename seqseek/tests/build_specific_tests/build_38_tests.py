@@ -158,3 +158,9 @@ class TestBuild38(TestCase):
         expected_seq = "ATTGTACGGTACCATAAATA"
         seq = Chromosome("MT", assembly=BUILD38).sequence(16121, 16141)
         self.assertEqual(expected_seq, seq)
+
+    def test_looped_mito(self):
+        mito_length = BUILD38_CHROMOSOMES['MT']
+        expected = 'CATCACGATGGATCACAGGT'
+        seq = Chromosome('MT', BUILD38).sequence(mito_length - 10, mito_length + 10, loop=True)
+        self.assertEqual(expected, seq)
