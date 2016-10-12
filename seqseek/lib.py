@@ -36,7 +36,18 @@ BUILD37_ACCESSIONS = {
     '22': 'NC_000022.10',
     'X': 'NC_000023.10',
     'Y': 'NC_000024.9',
-    'MT': 'NC_012920',
+    'MT': 'NC_012920.1',
+
+    # UCSC names for haplotype contigs
+    'chr6_apd_hap1': 'NT_167244.1',
+    'chr6_cox_hap2': 'NT_113891.2',
+    'chr6_dbb_hap3': 'NT_167245.1',
+    'chr6_mann_hap4': 'NT_167246.1',
+    'chr6_mcf_hap5': 'NT_167247.1',
+    'chr6_qbl_hap6': 'NT_167248.1',
+    'chr6_ssto_hap7': 'NT_167249.1',
+    'chr4_ctg9_hap1': 'NT_167250.1',
+    'chr17_ctg5_hap1': 'NT_167251.1'
 }
 
 BUILD38_ACCESSIONS = {
@@ -64,7 +75,7 @@ BUILD38_ACCESSIONS = {
     '22': 'NC_000022.11',
     'X': 'NC_000023.11',
     'Y': 'NC_000024.10',
-    'MT': 'NC_012920',
+    'MT': 'NC_012920.1',
 }
 
 # chromosome names and lengths for build 37
@@ -120,6 +131,20 @@ ACCESSION_LENGTHS = {
     'NC_000022.10':  51304566,
     'NC_000023.10':  155270560,
     'NC_000024.9':   59373566,
+
+    # Mito is shared between 37 & 38
+    'NC_012920.1':   16569,
+
+    # Haplotype contigs
+    'NT_113891.2': 4795371,
+    'NT_167244.1': 4622290,
+    'NT_167245.1': 4610396,
+    'NT_167246.1': 4683263,
+    'NT_167247.1': 4833398,
+    'NT_167248.1': 4611984,
+    'NT_167249.1': 4928567,
+    'NT_167250.1': 590426,
+    'NT_167251.1': 1680828,
 }
 
 
@@ -140,3 +165,18 @@ def sorted_nicely(l):
     convert = lambda text: int(text) if text.isdigit() else text
     alphanum_key = lambda key: [ convert(c) for c in re.split('([0-9]+)', key) ]
     return sorted(l, key = alphanum_key)
+
+
+"""
+The nine haplotype chromosomes are:
+    name                    accession       UCSC chr name
+    HSCHR6_MHC_APD_CTG1     GL000250.1      chr6_apd_hap1
+    HSCHR6_MHC_COX_CTG1     GL000251.1      chr6_cox_hap2
+    HSCHR6_MHC_DBB_CTG1     GL000252.1      chr6_dbb_hap3
+    HSCHR6_MHC_MANN_CTG1    GL000253.1      chr6_mann_hap4
+    HSCHR6_MHC_MCF_CTG1     GL000254.1      chr6_mcf_hap5
+    HSCHR6_MHC_QBL_CTG1     GL000255.1      chr6_qbl_hap6
+    HSCHR6_MHC_SSTO_CTG1    GL000256.1      chr6_ssto_hap7
+    HSCHR4_1_CTG9           GL000257.1      chr4_ctg9_hap1
+    HSCHR17_1_CTG5          GL000258.1      chr17_ctg5_hap1
+"""

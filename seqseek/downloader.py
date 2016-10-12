@@ -5,7 +5,7 @@ import requests
 from lib import get_data_directory, URI, BUILD37, BUILD38
 from chromosome import Chromosome
 
-#from tests.build_specific_tests import run_build_test_suite
+from tests.build_specific_tests import run_build_test_suite
 
 PROGRAM_TO_ASSEMBLY = {
     'download_build_37': BUILD37,
@@ -74,11 +74,10 @@ class Downloader(object):
 
         for name in to_download:
             self.download_chromosome(name)
-        #run_build_test_suite(self.assembly)
+        run_build_test_suite(self.assembly)
 
     def download_chromosome(self, name):
         chromosome = Chromosome(name, self.assembly)
-        self.log(chromosome.path())
         path = chromosome.path()
         directory = os.path.dirname(chromosome.path())
 
@@ -106,5 +105,6 @@ class Downloader(object):
         with open(path, 'w') as f:
             f.write(header)
             f.write(content)
+            f.write('\n')
 
         self.log('...Complete', True)

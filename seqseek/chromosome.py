@@ -82,7 +82,7 @@ class Chromosome(object):
         return os.path.exists(self.path())
 
     def header(self):
-        with open(self.path) as f:
+        with open(self.path()) as f:
             return f.readline()
 
     def read(self, start, length):
