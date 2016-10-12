@@ -1,19 +1,15 @@
 import os
 
-from .exceptions import TooManyLoops
+from .exceptions import TooManyLoops, MissingDataError
 from .lib import (BUILD37, BUILD38, get_data_directory, sorted_nicely,
-                 BUILD37_CHROMOSOMES, BUILD38_CHROMOSOMES)
-
-
-class MissingDataError(Exception):
-    pass
+                 BUILD37_ACCESSIONS, BUILD38_ACCESSIONS, ACCESSION_LENGTHS)
 
 
 class Chromosome(object):
 
     ASSEMBLY_CHROMOSOMES = {
-        BUILD37: BUILD37_CHROMOSOMES,
-        BUILD38: BUILD38_CHROMOSOMES
+        BUILD37: BUILD37_ACCESSIONS,
+        BUILD38: BUILD38_ACCESSIONS
     }
 
     def __init__(self, chromosome_name, assembly=BUILD37):
@@ -24,26 +20,28 @@ class Chromosome(object):
                 returns the first 100 nucleotides of chromosome 1
 
         The default assembly is Homo_sapiens.GRCh37
-        You may also use Build 38::
+        You may also use Build 38:
 
                 from seqseek import BUILD38
                 Chromosome('1', BUILD38).sequence(0, 100)
         """
         self.name = str(chromosome_name)
         self.assembly = assembly
+
         self.validate_assembly()
-        self.chromosome_lengths = self.ASSEMBLY_CHROMOSOMES[self.assembly]
         self.validate_name()
-        self.length = self.chromosome_lengths[self.name]
+
+        self.accession = self.ASSEMBLY_CHROMOSOMES[assembly][self.name]
+        self.length = ACCESSION_LENGTHS[self.accession]
 
     def validate_assembly(self):
         if self.assembly not in (BUILD37, BUILD38):
             raise ValueError(
-            'Sorry, currently the only supported assemblies are {} and {}'.format(
-            BUILD37, BUILD38))
+                'Sorry, the only supported assemblies are {} and {}'.format(
+                    BUILD37, BUILD38))
 
     def validate_name(self):
-        if self.name not in self.chromosome_lengths.keys():
+        if self.name not in self.ASSEMBLY_CHROMOSOMES[self.assembly]:
             raise ValueError("{name} is not a valid chromosome name".format(name=self.name))
 
     def validate_coordinates(self, start, end, loop=False):
@@ -61,25 +59,31 @@ class Chromosome(object):
 
     @classmethod
     def sorted_chromosome_length_tuples(cls, assembly):
-        chromosome_lengths = cls.ASSEMBLY_CHROMOSOMES[assembly]
-        return sorted(chromosome_lengths.items(),
+        # TODO: simplify
+        name_to_accession = cls.ASSEMBLY_CHROMOSOMES[assembly]
+        chromosome_length_tuples = []
+        for name, accession in name_to_accession.items():
+            if name in name_to_accession and accession in ACCESSION_LENGTHS:
+                chromosome_length_tuples.append((name, ACCESSION_LENGTHS[accession]))
+
+        return sorted(chromosome_length_tuples,
                       key=lambda pair:
                           sorted_nicely(
-                              chromosome_lengths.keys()).index(pair[0]))
+                              ACCESSION_LENGTHS.keys()).index(name_to_accession[pair[0]]))
 
     def filename(self):
-       return 'chr{}.fa'.format(self.name)
+       return '{}.fa'.format(self.accession)
 
     def path(self):
         data_dir = get_data_directory()
-        return os.path.join(data_dir, self.assembly, self.filename())
+        return os.path.join(data_dir, self.filename())
 
     def exists(self):
         return os.path.exists(self.path())
 
     def header(self):
-        header_name = self.name if self.name != 'MT' else 'M'
-        return ">chr" + header_name + "\n"
+        with open(self.path) as f:
+            return f.readline()
 
     def read(self, start, length):
         with open(self.path()) as fasta:
