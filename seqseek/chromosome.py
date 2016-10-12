@@ -31,7 +31,7 @@ class Chromosome(object):
         self.name = str(chromosome_name)
         self.assembly = assembly
         self.validate_assembly()
-        self.chromosome_lengths = Chromosome.ASSEMBLY_CHROMOSOMES[self.assembly]
+        self.chromosome_lengths = self.ASSEMBLY_CHROMOSOMES[self.assembly]
         self.validate_name()
         self.length = self.chromosome_lengths[self.name]
 
@@ -45,12 +45,14 @@ class Chromosome(object):
         if self.name not in self.chromosome_lengths.keys():
             raise ValueError("{name} is not a valid chromosome name".format(name=self.name))
 
-    def validate_coordinates(self, start, end):
+    def validate_coordinates(self, start, end, loop=False):
+        if loop and self.name != 'MT':
+            raise ValueError('Loop may only be specified for the mitochondria.')
         if start < 0 or end < 0:
             raise ValueError("Start and end must be positive integers")
         if end < start:
             raise ValueError("Start position cannot be greater than end position")
-        if start > self.length or end > self.length:
+        if start > self.length or (end > self.length and not loop):
             raise ValueError('Coordinates out of bounds. Chr {} has {} bases.'.format(
                 self.name, self.length))
 
@@ -76,9 +78,20 @@ class Chromosome(object):
         header_name = self.name if self.name != 'MT' else 'M'
         return ">chr" + header_name + "\n"
 
-    def sequence(self, start, end):
-        self.validate_coordinates(start, end)
-        seq_length = end - start
+    def read(self, start, length):
+        with open(self.path()) as fasta:
+            header = fasta.readline()
+            fasta.seek(start + len(header))
+            return fasta.read(length)
+
+    def sequence(self, start, end, loop=False):
+        self.validate_coordinates(start, end, loop=loop)
+
+        if loop and end > self.length:
+            # deal with looping around circular mito
+            reads = [(start, self.length - start), (0, end - self.length)]
+        else:
+            reads = [(start, end - start)]
 
         if not self.exists():
             build = '37' if self.assembly == BUILD37 else '38'
@@ -86,7 +99,4 @@ class Chromosome(object):
                 '{} does not exist. Please download on the command line with: '
                 'download_build_{}'.format(self.path(), build))
 
-        with open(self.path()) as fasta:
-            # each file has a header like ">chr15" followed by a newline
-            fasta.seek(start + len(self.header()))
-            return fasta.read(seq_length)
+        return ''.join([self.read(*read) for read in reads])
