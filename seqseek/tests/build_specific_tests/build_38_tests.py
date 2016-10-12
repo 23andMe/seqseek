@@ -163,7 +163,7 @@ class TestBuild38(TestCase):
         mito_accession = BUILD38_ACCESSIONS['MT']
         mito_length = ACCESSION_LENGTHS[mito_accession]
         expected = 'CATCACGATGGATCACAGGT'
-        seq = Chromosome('MT', BUILD38).sequence(mito_length - 10, mito_length + 10, loop=True)
+        seq = Chromosome('MT', BUILD38, loop=True).sequence(mito_length - 10, mito_length + 10)
         self.assertEqual(expected, seq)
 
     def test_mito_N(self):

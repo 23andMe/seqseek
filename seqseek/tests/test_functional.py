@@ -74,27 +74,27 @@ class TestChromosome(TestCase):
     def test_mito_loop_end(self):
         expected_seq = 'CTTCACCCTGATCACAGGT'
 
-        seq = Chromosome('MT').sequence(10, 30, loop=True)
+        seq = Chromosome('MT', loop=True).sequence(10, 30)
         self.assertEqual(seq, expected_seq)
 
-        seq = Chromosome('MT').sequence(-10, 10, loop=True)
+        seq = Chromosome('MT', loop=True).sequence(-10, 10)
         self.assertEqual(seq, expected_seq)
 
     def test_others_are_not_circular(self):
         with self.assertRaises(ValueError):
-            Chromosome(1).sequence(0, 1, loop=True)
+            Chromosome(1, loop=True).sequence(0, 1)
 
     def test_too_many_loops(self):
         """should never return a sequence longer than the length of the contig"""
         mt_accession = BUILD37_ACCESSIONS['MT']
         mt_length = ACCESSION_LENGTHS[mt_accession]
-        Chromosome('MT').sequence(0, mt_length, loop=True)
+        Chromosome('MT', loop=True).sequence(0, mt_length)
         with self.assertRaises(TooManyLoops):
-            Chromosome('MT').sequence(0, mt_length + 1, loop=True)
+            Chromosome('MT', loop=True).sequence(0, mt_length + 1)
 
-        Chromosome('MT').sequence(-1, mt_length - 1, loop=True)
+        Chromosome('MT', loop=True).sequence(-1, mt_length - 1)
         with self.assertRaises(TooManyLoops):
-            Chromosome('MT').sequence(-1, mt_length, loop=True)
+            Chromosome('MT', loop=True).sequence(-1, mt_length)
 
 
 class TestInvalidQueries(TestCase):

@@ -12,7 +12,7 @@ class Chromosome(object):
         BUILD38: BUILD38_ACCESSIONS
     }
 
-    def __init__(self, chromosome_name, assembly=BUILD37):
+    def __init__(self, chromosome_name, assembly=BUILD37, loop=False):
         """
         Usage:
 
@@ -27,9 +27,11 @@ class Chromosome(object):
         """
         self.name = str(chromosome_name)
         self.assembly = assembly
+        self.loop = loop
 
         self.validate_assembly()
         self.validate_name()
+        self.validate_loop()
 
         self.accession = self.ASSEMBLY_CHROMOSOMES[assembly][self.name]
         self.length = ACCESSION_LENGTHS[self.accession]
@@ -44,17 +46,19 @@ class Chromosome(object):
         if self.name not in self.ASSEMBLY_CHROMOSOMES[self.assembly]:
             raise ValueError("{name} is not a valid chromosome name".format(name=self.name))
 
-    def validate_coordinates(self, start, end, loop=False):
-        if loop and self.name != 'MT':
+    def validate_loop(self):
+        if self.loop and self.name != 'MT':
             raise ValueError('Loop may only be specified for the mitochondria.')
-        if (start < 0 and not loop) or end < 0:
+
+    def validate_coordinates(self, start, end):
+        if (start < 0 and not self.loop) or end < 0:
             raise ValueError("Start and end must be positive integers for this chromosome")
         if end < start:
             raise ValueError("Start position cannot be greater than end position")
-        if start > self.length or (end > self.length and not loop):
+        if start > self.length or (end > self.length and not self.loop):
             raise ValueError('Coordinates out of bounds. Chr {} has {} bases.'.format(
                 self.name, self.length))
-        if loop and end - start > self.length:
+        if self.loop and end - start > self.length:
             raise TooManyLoops()
 
     @classmethod
@@ -91,12 +95,12 @@ class Chromosome(object):
             fasta.seek(start + len(header))
             return fasta.read(length)
 
-    def sequence(self, start, end, loop=False):
-        self.validate_coordinates(start, end, loop=loop)
+    def sequence(self, start, end):
+        self.validate_coordinates(start, end)
 
-        if loop and end > self.length:
+        if self.loop and end > self.length:
             reads = [(start, self.length - start), (0, end - self.length)]
-        elif loop and start < 0:
+        elif self.loop and start < 0:
             reads = [(self.length + start, self.length + start), (0, end)]
         else:
             reads = [(start, end - start)]
