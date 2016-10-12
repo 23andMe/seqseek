@@ -1,60 +1,53 @@
 import os
-import fnmatch
 
 from seqseek.chromosome import Chromosome
 
-from seqseek.lib import get_data_directory, BUILD37_CHROMOSOMES
+from seqseek.lib import get_data_directory, BUILD37_ACCESSIONS, ACCESSION_LENGTHS
 
 from unittest import TestCase
 
 
 class TestBuild37(TestCase):
 
-    GRCH37_PATH = os.path.join(get_data_directory(), 'homo_sapiens_GRCh37')
-
-    def test_file_count(self):
-        file_count = len(fnmatch.filter(os.listdir(TestBuild37.GRCH37_PATH), '*.fa'))
-        self.assertEqual(file_count, 33)
-
     def test_file_names(self):
-        for name in BUILD37_CHROMOSOMES.keys():
-            fasta = os.path.join(TestBuild37.GRCH37_PATH,
-                                 "chr" + str(name) + ".fa")
-            self.assertTrue(os.path.isfile(fasta))
+        for accession in BUILD37_ACCESSIONS.values():
+            fasta = os.path.join(get_data_directory(), str(accession) + ".fa")
+            self.assertTrue(os.path.isfile(fasta), fasta)
 
     # all test sequences were extracted from https://genome.ucsc.edu/ using the
     # chromosome browser tool
 
     def test_chr_start_sequences(self):
-        exclude = ('MT', '17' , '6_cox_hap2', '6_apd_hap1', '6_ssto_hap7', '6_mcf_hap5',
-                   '6_qbl_hap6', '6_mann_hap4', '6_dbb_hap3', '17_ctg5_hap1')
+        exclude = ('MT', '17' , 'chr6_cox_hap2', 'chr6_apd_hap1', 'chr6_ssto_hap7',
+                   'chr6_mcf_hap5', 'chr6_qbl_hap6', 'chr6_mann_hap4', 'chr6_dbb_hap3',
+                   'chr17_ctg5_hap1', 'chr4_ctg9_hap1')
         test_str = "N" * 20
-        for name in BUILD37_CHROMOSOMES.keys():
+        for name in BUILD37_ACCESSIONS.keys():
             # these chromosomes do not have telomeres
             if name in exclude:
                 continue
             seq = Chromosome(name).sequence(0, 20)
-            self.assertEqual(seq, test_str)
+            self.assertEqual(seq, test_str, name)
 
     def test_chr1_sequence(self):
         expected_seq = "AATCTAAAAAACTGTCAGAT"
         seq = Chromosome(1).sequence(243400000, 243400020)
-        self.assertEqual(expected_seq, seq)
+        self.assertEqual(expected_seq.upper(), seq)
 
     def test_chr2_sequence(self):
         expected_seq = "tgtccacgcgcggatgtcgt"
         seq = Chromosome(2).sequence(237513040, 237513060)
-        self.assertEqual(expected_seq, seq)
+        self.assertEqual(expected_seq.upper(), seq)
 
     def test_chr3_sequence(self):
         expected_seq = "ctctttcgcccaggctggag"
         seq = Chromosome(3).sequence(190352536, 190352556)
-        self.assertEqual(expected_seq, seq)
+        self.assertEqual(expected_seq.upper(), seq)
 
     def test_chr4_sequence(self):
         expected_seq = "ttggagccaaggtctcactc"
         seq = Chromosome(4).sequence(184622015, 184622035)
-        self.assertEqual(expected_seq, seq)
+        self.assertEqual(expected_seq.upper(), seq)
 
     def test_chr5_sequence(self):
         expected_seq = "CTTTACTCCACTCATATTCT"
@@ -109,7 +102,7 @@ class TestBuild37(TestCase):
     def test_chr15_sequence(self):
         expected_seq = "ttcaatcactgatacccttt"
         seq = Chromosome(15).sequence(99921491, 99921511)
-        self.assertEqual(expected_seq, seq)
+        self.assertEqual(expected_seq.upper(), seq)
 
     def test_chr16_sequence(self):
         expected_seq = "CTTTCAGCACAGGGCTGTGA"
@@ -157,83 +150,93 @@ class TestBuild37(TestCase):
         self.assertEqual(expected_seq, seq)
 
     def test_chrMT_sequence(self):
-        expected_seq = "TATTGTACGGTACCATAAAT"
+        expected_seq = "ATTGTACGGTACCATAAATA"
         seq = Chromosome("MT").sequence(16121, 16141)
         self.assertEqual(expected_seq, seq)
 
     def test_chr6_cox_hap2(self):
+        accession = BUILD37_ACCESSIONS['chr6_cox_hap2']
+        max_length = ACCESSION_LENGTHS[accession]
+
         expected_seq = "GATCCTGAGTGGGTGAGTGG"
-        seq = Chromosome("6_cox_hap2").sequence(3065395, 3065415)
+        seq = Chromosome("chr6_cox_hap2").sequence(3065395, 3065415)
         self.assertEqual(expected_seq, seq)
 
         expected_seq = "TATTCTTGCCAATAT"
-        seq = Chromosome("6_cox_hap2").sequence(200, 215).upper()
+        seq = Chromosome("chr6_cox_hap2").sequence(200, 215).upper()
         self.assertEqual(expected_seq, seq)
 
         expected_seq = "TCTGGCCTGGGAGTC"
-        seq = Chromosome("6_cox_hap2").sequence(0, 15).upper()
+        seq = Chromosome("chr6_cox_hap2").sequence(0, 15).upper()
         self.assertEqual(expected_seq, seq)
 
         expected = "tc"
-        seq = Chromosome('6_cox_hap2').sequence(4795369, BUILD37_CHROMOSOMES['6_cox_hap2'])
-        self.assertEqual(expected, seq)
+        seq = Chromosome('chr6_cox_hap2').sequence(4795369, max_length)
+        self.assertEqual(expected.upper(), seq)
 
     def test_chr6_apd_hap1(self):
+        accession = BUILD37_ACCESSIONS['chr6_apd_hap1']
+        max_length = ACCESSION_LENGTHS[accession]
+
         expected = "GAATTCAGCTCGCCGACGGC"
-        seq = Chromosome('6_apd_hap1').sequence(0, 20)
+        seq = Chromosome('chr6_apd_hap1').sequence(0, 20)
         self.assertEqual(expected, seq)
 
         expected = "ACAATTAGAAATACTAGGAG"
-        seq = Chromosome('6_apd_hap1').sequence(3000, 3020)
+        seq = Chromosome('chr6_apd_hap1').sequence(3000, 3020)
         self.assertEqual(expected, seq)
 
         expected = "cacT"
-        seq = Chromosome('6_apd_hap1').sequence(BUILD37_CHROMOSOMES['6_apd_hap1'] - 4,
-                                                BUILD37_CHROMOSOMES['6_apd_hap1'])
-        self.assertEqual(expected, seq)
+        seq = Chromosome('chr6_apd_hap1').sequence(max_length - 4, max_length)
+        self.assertEqual(expected.upper(), seq)
 
     def test_chr6_ssto_hap7(self):
+        accession = BUILD37_ACCESSIONS['chr6_ssto_hap7']
+        max_length = ACCESSION_LENGTHS[accession]
+
         expected = "GGCCAGGTTTTGTGAATTCT"
-        seq = Chromosome('6_ssto_hap7').sequence(3000, 3020)
-        self.assertEqual(expected, seq)
+        seq = Chromosome('chr6_ssto_hap7').sequence(3000, 3020)
+        self.assertEqual(expected.upper(), seq)
 
         expected = "ggcc"
-        seq = Chromosome('6_ssto_hap7').sequence(BUILD37_CHROMOSOMES['6_ssto_hap7'] - 4,
-                                                BUILD37_CHROMOSOMES['6_ssto_hap7'])
-        self.assertEqual(expected, seq)
+        seq = Chromosome('chr6_ssto_hap7').sequence(max_length - 4, max_length)
+        self.assertEqual(expected.upper(), seq)
 
     def test_chr6_mcf_hap5(self):
         expected = "ACAATTAGAAATACTAGGAG"
-        seq = Chromosome('6_mcf_hap5').sequence(3000, 3020)
+        seq = Chromosome('chr6_mcf_hap5').sequence(3000, 3020)
         self.assertEqual(expected, seq)
 
     def test_chr6_qbl_hap6(self):
+        accession = BUILD37_ACCESSIONS['chr6_qbl_hap6']
+        max_length = ACCESSION_LENGTHS[accession]
+
         expected = "ACAATTAGAAATACTAGGAG"
-        seq = Chromosome('6_qbl_hap6').sequence(3000, 3020)
+        seq = Chromosome('chr6_qbl_hap6').sequence(3000, 3020)
         self.assertEqual(expected, seq)
 
         expected = "ggcc"
-        seq = Chromosome('6_qbl_hap6').sequence(BUILD37_CHROMOSOMES['6_qbl_hap6'] - 4,
-                                                BUILD37_CHROMOSOMES['6_qbl_hap6'])
-        self.assertEqual(expected, seq)
+        seq = Chromosome('chr6_qbl_hap6').sequence(max_length - 4, max_length)
+        self.assertEqual(expected.upper(), seq)
 
     def test_chr6_mann_hap4(self):
         expected = "ACAATTAGAAATACTAGGAG"
-        seq = Chromosome('6_mann_hap4').sequence(3000, 3020)
+        seq = Chromosome('chr6_mann_hap4').sequence(3000, 3020)
         self.assertEqual(expected, seq)
 
     def test_chr6_dbb_hap3(self):
         expected = "ACAATTAGAAATACTAGGAG"
-        seq = Chromosome('6_dbb_hap3').sequence(3000, 3020)
+        seq = Chromosome('chr6_dbb_hap3').sequence(3000, 3020)
         self.assertEqual(expected, seq)
 
     def test_chr17_ctg5_hap1(self):
         expected = "TTTTGGCTACAATAATTCTT"
-        seq = Chromosome('17_ctg5_hap1').sequence(3000, 3020)
+        seq = Chromosome('chr17_ctg5_hap1').sequence(3000, 3020)
         self.assertEqual(expected, seq)
 
     def test_looped_mito(self):
-        mito_length = BUILD37_CHROMOSOMES['MT']
+        mito_accession = BUILD37_ACCESSIONS['MT']
+        mito_length = ACCESSION_LENGTHS[mito_accession]
         expected = 'CATCACGATGGATCACAGGT'
         seq = Chromosome('MT').sequence(mito_length - 10, mito_length + 10, loop=True)
         self.assertEqual(expected, seq)

@@ -3,7 +3,7 @@ import fnmatch
 
 from seqseek.chromosome import Chromosome
 
-from seqseek.lib import get_data_directory, BUILD38_CHROMOSOMES, BUILD38
+from seqseek.lib import get_data_directory, BUILD38_ACCESSIONS, BUILD38, ACCESSION_LENGTHS
 
 from unittest import TestCase
 
@@ -17,7 +17,7 @@ class TestBuild38(TestCase):
         self.assertEqual(file_count, 25)
 
     def test_file_names(self):
-        for name in BUILD38_CHROMOSOMES.keys():
+        for name in BUILD38_ACCESSIONS.keys():
             fasta = os.path.join(TestBuild38.GRCH38_PATH,
                                  "chr" + str(name) + ".fa")
             self.assertTrue(os.path.isfile(fasta))
@@ -27,7 +27,7 @@ class TestBuild38(TestCase):
 
     def test_chr_start_sequences(self):
         test_str = "N" * 20
-        for name in BUILD38_CHROMOSOMES.keys():
+        for name in BUILD38_ACCESSIONS.keys():
             # these chromosomes do not have telomeres
             if name == 'MT'or name == '17':
                 continue
@@ -52,7 +52,7 @@ class TestBuild38(TestCase):
     def test_chr4_sequence(self):
         expected_seq = "CTGtttctgaccacagcctc"
         seq = Chromosome(4, assembly=BUILD38).sequence(184624738, 184624758)
-        self.assertEqual(expected_seq, seq)
+        self.assertEqual(expected_seq.upper(), seq)
 
     def test_chr5_sequence(self):
         expected_seq = "CTGTCAATTATCACTGGATC"
@@ -72,7 +72,7 @@ class TestBuild38(TestCase):
     def test_chr8_sequence(self):
         expected_seq = "atcgtggcgtgttctgcagg"
         seq = Chromosome(8, assembly=BUILD38).sequence(132447200, 132447220)
-        self.assertEqual(expected_seq, seq)
+        self.assertEqual(expected_seq.upper(), seq)
 
     def test_chr9_sequence(self):
         expected_seq = "GAACCCTCTCATCGTCAAGG"
@@ -107,7 +107,7 @@ class TestBuild38(TestCase):
     def test_chr15_sequence(self):
         expected_seq = "attaaaatcatccaatttcc"
         seq = Chromosome(15, assembly=BUILD38).sequence(86987986, 86988006)
-        self.assertEqual(expected_seq, seq)
+        self.assertEqual(expected_seq.upper(), seq)
 
     def test_chr16_sequence(self):
         expected_seq = "TTTCAAGCCACAGTCGAGGA"
@@ -117,12 +117,12 @@ class TestBuild38(TestCase):
     def test_chr17_sequence(self):
         expected_seq = "aaacatcatctctaccaaaa"
         seq = Chromosome(17, assembly=BUILD38).sequence(80014178, 80014198)
-        self.assertEqual(expected_seq, seq)
+        self.assertEqual(expected_seq.upper(), seq)
 
     def test_chr18_sequence(self):
         expected_seq = "TGCAAAGAGAAATCCTTgga"
         seq = Chromosome(18, assembly=BUILD38).sequence(67834418, 67834438)
-        self.assertEqual(expected_seq, seq)
+        self.assertEqual(expected_seq.upper(), seq)
 
     def test_chr19_sequence(self):
         expected_seq = "CTGGGCTGCAGAATCGCTGG"
@@ -147,7 +147,7 @@ class TestBuild38(TestCase):
     def test_chrX_sequence(self):
         expected_seq = "GGACAACACCtgttaggggc"
         seq = Chromosome("X", assembly=BUILD38).sequence(152811545, 152811565)
-        self.assertEqual(expected_seq, seq)
+        self.assertEqual(expected_seq.upper(), seq)
 
     def test_chrY_sequence(self):
         expected_seq = "CAGACCTTCTGCAGTGCACC"
@@ -160,7 +160,8 @@ class TestBuild38(TestCase):
         self.assertEqual(expected_seq, seq)
 
     def test_looped_mito(self):
-        mito_length = BUILD38_CHROMOSOMES['MT']
+        mito_accession = BUILD38_ACCESSIONS['MT']
+        mito_length = ACCESSION_LENGTHS[mito_accession]
         expected = 'CATCACGATGGATCACAGGT'
         seq = Chromosome('MT', BUILD38).sequence(mito_length - 10, mito_length + 10, loop=True)
         self.assertEqual(expected, seq)

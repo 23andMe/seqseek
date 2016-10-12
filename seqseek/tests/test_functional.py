@@ -3,7 +3,7 @@ from unittest import TestCase
 
 from seqseek.exceptions import TooManyLoops
 from seqseek.chromosome import Chromosome, MissingDataError
-from seqseek.lib import get_data_directory, BUILD37, BUILD37_CHROMOSOMES
+from seqseek.lib import get_data_directory, BUILD37, BUILD37_ACCESSIONS, ACCESSION_LENGTHS
 
 
 class TestDataDirectory(TestCase):
@@ -31,12 +31,14 @@ class TestChromosome(TestCase):
     TEST_DATA_DIR = os.path.join('seqseek', 'tests', 'test_chromosomes')
 
     def setUp(self):
-        self._mt_length = BUILD37_CHROMOSOMES['MT']
+        mt_accession = BUILD37_ACCESSIONS['MT']
+        self._mt_length = ACCESSION_LENGTHS[mt_accession]
         os.environ['DATA_DIR_VARIABLE'] = TestChromosome.TEST_DATA_DIR
-        BUILD37_CHROMOSOMES['MT'] = 20
+        ACCESSION_LENGTHS[mt_accession] = 20
 
     def tearDown(self):
-        BUILD37_CHROMOSOMES['MT'] = self._mt_length
+        mt_accession = BUILD37_ACCESSIONS['MT']
+        ACCESSION_LENGTHS[mt_accession] = self._mt_length
 
     def test_invalid_assembly(self):
         with self.assertRaises(ValueError):
@@ -84,13 +86,15 @@ class TestChromosome(TestCase):
 
     def test_too_many_loops(self):
         """should never return a sequence longer than the length of the contig"""
-        Chromosome('MT').sequence(0, BUILD37_CHROMOSOMES['MT'], loop=True)
+        mt_accession = BUILD37_ACCESSIONS['MT']
+        mt_length = ACCESSION_LENGTHS[mt_accession]
+        Chromosome('MT').sequence(0, mt_length, loop=True)
         with self.assertRaises(TooManyLoops):
-            Chromosome('MT').sequence(0, BUILD37_CHROMOSOMES['MT'] + 1, loop=True)
+            Chromosome('MT').sequence(0, mt_length + 1, loop=True)
 
-        Chromosome('MT').sequence(-1, BUILD37_CHROMOSOMES['MT'] - 1, loop=True)
+        Chromosome('MT').sequence(-1, mt_length - 1, loop=True)
         with self.assertRaises(TooManyLoops):
-            Chromosome('MT').sequence(-1, BUILD37_CHROMOSOMES['MT'], loop=True)
+            Chromosome('MT').sequence(-1, mt_length, loop=True)
 
 
 class TestInvalidQueries(TestCase):
