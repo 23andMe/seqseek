@@ -163,5 +163,21 @@ class TestBuild38(TestCase):
         mito_accession = BUILD38_ACCESSIONS['MT']
         mito_length = ACCESSION_LENGTHS[mito_accession]
         expected = 'CATCACGATGGATCACAGGT'
-        seq = Chromosome('MT', BUILD38).sequence(mito_length - 10, mito_length + 10, loop=True)
+
+        seq = Chromosome('MT', BUILD38, loop=True).sequence(mito_length - 10, mito_length + 10)
         self.assertEqual(expected, seq)
+
+        seq = Chromosome('MT', BUILD38, loop=True).sequence(-10, 10)
+        self.assertEqual(expected, seq)
+
+    def test_mito_N(self):
+        """
+        From mitomap:
+            *3107del is maintained in this revised sequence with the gap
+            represented by an 'N'. THIS ALLOWS HISTORICAL NUCLEOTIDE NUMBERING TO
+            BE MAINTAINED.
+
+        We remove this 'N' base since it is only present to preserve numbering and is
+        not actually part of the observed sequence.
+        """
+        self.assertEqual('', Chromosome('MT').sequence(3106, 3107))

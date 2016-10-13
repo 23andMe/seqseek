@@ -15,7 +15,7 @@ elif PY3:
 
 setup(
     name='seqseek',
-    version='0.2.0',
+    version='0.2.2',
     url='https://github.com/23andMe/seqseek',
     download_url = 'https://github.com/23andMe/seqseek/tarball/0.1.10',
     author='23andMe Engineering',
