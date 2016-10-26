@@ -20,7 +20,7 @@ class TestBuild37(TestCase):
     def test_chr_start_sequences(self):
         exclude = ('MT', '17' , 'chr6_cox_hap2', 'chr6_apd_hap1', 'chr6_ssto_hap7',
                    'chr6_mcf_hap5', 'chr6_qbl_hap6', 'chr6_mann_hap4', 'chr6_dbb_hap3',
-                   'chr17_ctg5_hap1', 'chr4_ctg9_hap1')
+                   'chr17_ctg5_hap1', 'chr4_ctg9_hap1', 'RSRS')
         test_str = "N" * 20
         for name in BUILD37_ACCESSIONS.keys():
             # these chromosomes do not have telomeres
@@ -256,3 +256,8 @@ class TestBuild37(TestCase):
         not actually part of the observed sequence.
         """
         self.assertEqual('', Chromosome('MT').sequence(3106, 3107))
+
+    def test_RSRS(self):
+        expected = 'GGAC'
+        seq = Chromosome('NC_001807.4').sequence(750, 754)
+        self.assertEqual(expected, seq)

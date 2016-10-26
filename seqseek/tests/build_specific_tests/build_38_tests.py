@@ -17,10 +17,9 @@ class TestBuild38(TestCase):
         self.assertEqual(file_count, 25)
 
     def test_file_names(self):
-        for name in BUILD38_ACCESSIONS.keys():
-            fasta = os.path.join(TestBuild38.GRCH38_PATH,
-                                 "chr" + str(name) + ".fa")
-            self.assertTrue(os.path.isfile(fasta))
+        for accession in BUILD38_ACCESSIONS.values():
+            fasta = os.path.join(get_data_directory(), str(accession) + ".fa")
+            self.assertTrue(os.path.isfile(fasta), fasta)
 
     # all test sequences were extracted from https://genome.ucsc.edu/ using the
     # chromosome browser tool
@@ -29,7 +28,7 @@ class TestBuild38(TestCase):
         test_str = "N" * 20
         for name in BUILD38_ACCESSIONS.keys():
             # these chromosomes do not have telomeres
-            if name == 'MT'or name == '17':
+            if name in ('MT', 'RSRS', '17'):
                 continue
             seq = Chromosome(name, assembly=BUILD38).sequence(0, 20)
             self.assertEqual(seq, test_str)
@@ -181,3 +180,8 @@ class TestBuild38(TestCase):
         not actually part of the observed sequence.
         """
         self.assertEqual('', Chromosome('MT').sequence(3106, 3107))
+
+    def test_RSRS(self):
+        expected = 'GGAC'
+        seq = Chromosome('NC_001807.4').sequence(750, 754)
+        self.assertEqual(expected, seq)
