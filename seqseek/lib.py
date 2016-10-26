@@ -39,8 +39,9 @@ BUILD37_ACCESSIONS = {
     'X': 'NC_000023.10',
     'Y': 'NC_000024.9',
     'MT': 'NC_012920.1',
+    'RSRS': 'NC_001807.4',
 
-    # UCSC names for haplotype contigs
+    # UCSC names for haplotype scaffolds
     'chr6_apd_hap1': 'NT_167244.1',
     'chr6_cox_hap2': 'NT_113891.2',
     'chr6_dbb_hap3': 'NT_167245.1',
@@ -78,6 +79,7 @@ BUILD38_ACCESSIONS = {
     'X': 'NC_000023.11',
     'Y': 'NC_000024.10',
     'MT': 'NC_012920.1',
+    'RSRS': 'NC_001807.4',
 }
 
 # chromosome names and lengths for build 37
@@ -135,9 +137,10 @@ ACCESSION_LENGTHS = {
     'NC_000024.9':   59373566,
 
     # Mito is shared between 37 & 38
-    'NC_012920.1':   16569,
+    'NC_012920.1':   16569,  # rCRS
+    'NC_001807.4':   16571,  # RSRS
 
-    # Haplotype contigs
+    # Haplotype scaffolds
     'NT_113891.2': 4795371,
     'NT_167244.1': 4622290,
     'NT_167245.1': 4610396,
@@ -170,7 +173,7 @@ def sorted_nicely(l):
 
 
 """
-The nine haplotype chromosomes are:
+The nine haplotype scaffolds are:
     name                    accession       UCSC chr name
     HSCHR6_MHC_APD_CTG1     GL000250.1      chr6_apd_hap1
     HSCHR6_MHC_COX_CTG1     GL000251.1      chr6_cox_hap2

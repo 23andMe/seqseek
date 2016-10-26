@@ -96,6 +96,16 @@ class TestChromosome(TestCase):
         with self.assertRaises(TooManyLoops):
             Chromosome('MT', loop=True).sequence(-1, mt_length)
 
+    def test_load_by_accession(self):
+        # mostly duped from test_chr1_sequences
+        expected_seq = 'GGGGCGGGAGGACGGGCCCG'
+        seq = Chromosome('NC_000001.10').sequence(0, 20)
+        self.assertEqual(seq, expected_seq)
+        self.assertEqual(len(seq), 20)
+        expected_seq = 'GGGAG'
+        seq = Chromosome('NC_000001.10').sequence(5, 10)
+        self.assertEqual(seq, expected_seq)
+
 
 class TestInvalidQueries(TestCase):
 

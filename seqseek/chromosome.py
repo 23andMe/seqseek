@@ -33,7 +33,13 @@ class Chromosome(object):
         self.validate_name()
         self.validate_loop()
 
-        self.accession = self.ASSEMBLY_CHROMOSOMES[assembly][self.name]
+        if self.name in ACCESSION_LENGTHS:
+            # allow loading by accession
+            self.accession = self.name
+        else:
+            # allow loading by name
+            self.accession = self.ASSEMBLY_CHROMOSOMES[assembly][self.name]
+
         self.length = ACCESSION_LENGTHS[self.accession]
 
     def validate_assembly(self):
@@ -44,7 +50,10 @@ class Chromosome(object):
 
     def validate_name(self):
         if self.name not in self.ASSEMBLY_CHROMOSOMES[self.assembly]:
-            raise ValueError("{name} is not a valid chromosome name".format(name=self.name))
+            if self.name not in ACCESSION_LENGTHS:
+                raise ValueError(
+                    "{name} is not a valid chromosome name or accession".format(
+                        name=self.name))
 
     def validate_loop(self):
         if self.loop and self.name != 'MT':
