@@ -49,8 +49,8 @@ class Chromosome(object):
                     BUILD37, BUILD38))
 
     def validate_name(self):
-        if self.name not in self.ASSEMBLY_CHROMOSOMES[self.assembly]:
-            if self.name not in ACCESSION_LENGTHS:
+        if self.name not in ACCESSION_LENGTHS:
+            if self.name not in self.ASSEMBLY_CHROMOSOMES[self.assembly]:
                 raise ValueError(
                     "{name} is not a valid chromosome name or accession".format(
                         name=self.name))
