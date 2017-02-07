@@ -103,7 +103,8 @@ Chromosome('MT').sequence(3106, 3108)  # => 'T'
 
 
 ### Supported chromosome names and accessions 
-SeqSeek uses the following common chromosome names: `1-22`, `X`, `Y`, and `MT`. 
+SeqSeek uses the following common chromosome names: 
+`1`, `2`, ..., `22`, `X`, `Y`, and `MT`. 
 
 The full list of supported accessions is as follows:
 * NC_000001.10

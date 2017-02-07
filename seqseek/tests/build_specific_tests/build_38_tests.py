@@ -10,12 +10,6 @@ from unittest import TestCase
 
 class TestBuild38(TestCase):
 
-    GRCH38_PATH = os.path.join(get_data_directory(), 'homo_sapiens_GRCh38')
-
-    def test_file_count(self):
-        file_count = len(fnmatch.filter(os.listdir(TestBuild38.GRCH38_PATH), '*.fa'))
-        self.assertEqual(file_count, 25)
-
     def test_file_names(self):
         for accession in BUILD38_ACCESSIONS.values():
             fasta = os.path.join(get_data_directory(), str(accession) + ".fa")
