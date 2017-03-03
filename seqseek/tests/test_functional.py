@@ -3,7 +3,7 @@ from unittest import TestCase
 
 from seqseek.exceptions import TooManyLoops
 from seqseek.chromosome import Chromosome, MissingDataError
-from seqseek.lib import get_data_directory, BUILD37, BUILD37_ACCESSIONS, ACCESSION_LENGTHS
+from seqseek.lib import get_data_directory, BUILD37, BUILD37_ACCESSIONS, ACCESSION_LENGTHS, DATA_DIR_VARIABLE
 
 
 class TestDataDirectory(TestCase):
@@ -11,7 +11,7 @@ class TestDataDirectory(TestCase):
     TEST_DATA_DIR = os.path.join('seqseek', 'tests', 'test_chromosomes')
 
     def setUp(self):
-        os.environ['DATA_DIR_VARIABLE'] = TestChromosome.TEST_DATA_DIR
+        os.environ[DATA_DIR_VARIABLE] = TestChromosome.TEST_DATA_DIR
 
     def test_get_data_directory(self):
         data_dir = get_data_directory()
@@ -20,7 +20,7 @@ class TestDataDirectory(TestCase):
     def test_make_data_directory(self):
         new_dir = os.path.join(TestChromosome.TEST_DATA_DIR, "test")
         self.assertFalse(os.path.isdir(new_dir))
-        os.environ['DATA_DIR_VARIABLE'] = new_dir
+        os.environ[DATA_DIR_VARIABLE] = new_dir
         get_data_directory()
         self.assertTrue(os.path.isdir(new_dir))
         os.rmdir(new_dir)
@@ -33,7 +33,7 @@ class TestChromosome(TestCase):
     def setUp(self):
         mt_accession = BUILD37_ACCESSIONS['MT']
         self._mt_length = ACCESSION_LENGTHS[mt_accession]
-        os.environ['DATA_DIR_VARIABLE'] = TestChromosome.TEST_DATA_DIR
+        os.environ[DATA_DIR_VARIABLE] = TestChromosome.TEST_DATA_DIR
         ACCESSION_LENGTHS[mt_accession] = 20
 
     def tearDown(self):

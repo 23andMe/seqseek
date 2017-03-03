@@ -155,7 +155,7 @@ ACCESSION_LENGTHS = {
 
 def get_data_directory():
     default = os.path.expanduser(DEFAULT_DATA_DIR)
-    storage_dir = os.environ.get('DATA_DIR_VARIABLE', default)
+    storage_dir = os.environ.get(DATA_DIR_VARIABLE, default)
     os.environ[DATA_DIR_VARIABLE] = storage_dir
     if not os.path.exists(storage_dir):
         os.makedirs(storage_dir)
