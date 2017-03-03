@@ -15,9 +15,9 @@ elif PY3:
 
 setup(
     name='seqseek',
-    version='0.3.1',
+    version='0.3.2',
     url='https://github.com/23andMe/seqseek',
-    download_url = 'https://github.com/23andMe/seqseek/tarball/0.3.1',
+    download_url = 'https://github.com/23andMe/seqseek/tarball/0.3.2',
     author='23andMe Engineering',
     author_email=['mstrand@23andme.com'],
     description='Easy access to human reference genome sequences',
