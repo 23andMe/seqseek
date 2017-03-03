@@ -1,6 +1,6 @@
 SeqSeek [![Build Status](https://travis-ci.org/23andMe/seqseek.svg?branch=master)](https://travis-ci.org/23andMe/seqseek)
 =================
-Easy access to Homo sapiens reference genome sequences.
+Easy access to human reference genome sequences.
 
 This package calls open(file).seek(range) on FASTA files of ASCII characters to provide
 ranges of sequence strings. It is exactly as fast as your disk, for better or worse. 
