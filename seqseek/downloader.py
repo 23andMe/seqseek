@@ -1,11 +1,13 @@
+from __future__ import print_function
+from __future__ import absolute_import
 import os
 import argparse
 import requests
 
-from lib import get_data_directory, URI, BUILD37, BUILD38
-from chromosome import Chromosome
+from .lib import get_data_directory, URI, BUILD37, BUILD38
+from .chromosome import Chromosome
 
-from tests.build_specific_tests import run_build_test_suite
+from .tests.build_specific_tests import run_build_test_suite
 
 PROGRAM_TO_ASSEMBLY = {
     'download_build_37': BUILD37,
@@ -42,7 +44,7 @@ class Downloader(object):
 
     def log(self, msg, force=False):
         if self.verbose or force:
-            print msg  # TODO: add a log handler
+            print(msg)  # TODO: add a log handler
 
     def validate_assembly(self):
         if self.assembly not in self.SUPPORTED_ASSEMBLIES:
