@@ -63,16 +63,16 @@ class TestChromosome(TestCase):
         self.assertEqual(seq, expected_seq)
 
     def test_chrMT_sequence(self):
-        expected_seq = 'GATCACAGGTCTTCACCCT'
+        expected_seq = 'GATCACAGGTCTNTCACCCT'
         seq = Chromosome('MT').sequence(0, 20)
         self.assertEqual(seq, expected_seq)
-        self.assertEqual(len(seq), 19)  # the N base was removed
+        self.assertEqual(len(seq), 20)  # the N base was *not* removed
         expected_seq = 'CAGGT'
         seq = Chromosome('MT').sequence(5, 10)
         self.assertEqual(seq, expected_seq)
 
     def test_mito_loop_end(self):
-        expected_seq = 'CTTCACCCTGATCACAGGT'
+        expected_seq = 'CTNTCACCCTGATCACAGGT'
 
         seq = Chromosome('MT', loop=True).sequence(10, 30)
         self.assertEqual(seq, expected_seq)
