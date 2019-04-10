@@ -13,7 +13,7 @@ class Chromosome(object):
         BUILD38: BUILD38_ACCESSIONS
     }
 
-    def __init__(self, chromosome_name, assembly=BUILD37, loop=None):
+    def __init__(self, chromosome_name, assembly=BUILD37, loop=False, RCRS_N_remove=True):
         """
         Usage:
 
@@ -28,10 +28,8 @@ class Chromosome(object):
         """
         self.name = str(chromosome_name)
         self.assembly = assembly
-        if loop is None:
-            self.loop = True if self.name in MITOCHONDRIA_NAMES else False
-        else:
-            self.loop = loop
+        self.loop = loop
+        self.RCRS_N_remove = RCRS_N_remove
 
         self.validate_assembly()
         self.validate_name()
@@ -127,5 +125,11 @@ class Chromosome(object):
                 'download_build_{}'.format(self.path(), build))
 
         sequence = ''.join([self.read(*read) for read in reads])
+
+        # The rCRS mito contig contains an 'N' base at position 3107 to preserve legacy
+        # nucleotide numbering. We remove it because it is not part of the observed
+        # sequence. See http://www.mitomap.org/MITOMAP/HumanMitoSeq
+        if self.accession == RCRS_ACCESSION and self.RCRS_N_remove is True:
+            sequence = sequence.replace('N', '')
 
         return sequence
