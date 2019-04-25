@@ -2,7 +2,8 @@ import os
 
 from .exceptions import TooManyLoops, MissingDataError
 from .lib import (BUILD37, BUILD38, get_data_directory, sorted_nicely,
-                 BUILD37_ACCESSIONS, BUILD38_ACCESSIONS, ACCESSION_LENGTHS, RCRS_ACCESSION)
+                  BUILD37_ACCESSIONS, BUILD38_ACCESSIONS, ACCESSION_LENGTHS,
+                  RCRS_ACCESSION, MITOCHONDRIA_NAMES)
 
 
 class Chromosome(object):
@@ -12,7 +13,7 @@ class Chromosome(object):
         BUILD38: BUILD38_ACCESSIONS
     }
 
-    def __init__(self, chromosome_name, assembly=BUILD37, loop=False):
+    def __init__(self, chromosome_name, assembly=BUILD37, loop=False, RCRS_N_remove=True):
         """
         Usage:
 
@@ -28,6 +29,7 @@ class Chromosome(object):
         self.name = str(chromosome_name)
         self.assembly = assembly
         self.loop = loop
+        self.RCRS_N_remove = RCRS_N_remove
 
         self.validate_assembly()
         self.validate_name()
@@ -56,7 +58,7 @@ class Chromosome(object):
                         name=self.name))
 
     def validate_loop(self):
-        if self.loop and self.name != 'MT':
+        if self.loop and self.name not in MITOCHONDRIA_NAMES:
             raise ValueError('Loop may only be specified for the mitochondria.')
 
     def validate_coordinates(self, start, end):
@@ -87,7 +89,7 @@ class Chromosome(object):
                               ACCESSION_LENGTHS.keys()).index(name_to_accession[pair[0]]))
 
     def filename(self):
-       return '{}.fa'.format(self.accession)
+        return '{}.fa'.format(self.accession)
 
     def path(self):
         data_dir = get_data_directory()
@@ -127,7 +129,7 @@ class Chromosome(object):
         # The rCRS mito contig contains an 'N' base at position 3107 to preserve legacy
         # nucleotide numbering. We remove it because it is not part of the observed
         # sequence. See http://www.mitomap.org/MITOMAP/HumanMitoSeq
-        if self.accession == RCRS_ACCESSION:
+        if self.accession == RCRS_ACCESSION and self.RCRS_N_remove is True:
             sequence = sequence.replace('N', '')
 
         return sequence

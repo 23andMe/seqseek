@@ -152,6 +152,9 @@ ACCESSION_LENGTHS = {
     'NT_167251.1': 1680828,
 }
 
+MITOCHONDRIA_NAMES = {'MT', 'RSRS', BUILD37_ACCESSIONS['MT'], BUILD37_ACCESSIONS['RSRS'],
+                      BUILD38_ACCESSIONS['MT'], BUILD38_ACCESSIONS['RSRS']}
+
 
 def get_data_directory():
     default = os.path.expanduser(DEFAULT_DATA_DIR)

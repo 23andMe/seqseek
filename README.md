@@ -94,7 +94,8 @@ backward-compatibility then you may load it directly by accession (`NC_001807.4`
 The rCRS mitochondria sequence contains an 'N' base at position 3106-3107 to
 preserve legacy nucleotide numbering. This can be useful for using legacy
 coordinates but but is impractical when working with sequences that are
-expected to align to observed human mitochondrial sequences. SeqSeek removes this `N`:
+expected to align to observed human mitochondrial sequences. SeqSeek
+removes this `N` unless it is explicitly requested by passing `RCRS_N_remove=False`.
 
 ```python
 Chromosome('MT').sequence(3106, 3107)  # => ''
