@@ -25,6 +25,8 @@ setup(
     entry_points={'console_scripts': [
             'download_build_37 = seqseek.downloader:cmd_line',
             'download_build_38 = seqseek.downloader:cmd_line',
+            'seqseek_37 = seqseek.cli:cmd_line',
+            'seqseek_38 = seqseek.cli:cmd_line',
             'test_build_37 = seqseek.tests.build_specific_tests:test_build_37',
             'test_build_38 = seqseek.tests.build_specific_tests:test_build_38'
             ]},
