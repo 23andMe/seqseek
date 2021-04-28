@@ -44,6 +44,6 @@ def cmd_line():
 
     # Do it
     kwargs = {'loop': True} if args.chromosome in ('MT', BUILD37_ACCESSIONS['MT']) else {}
-    c = Chromosome(args.chromosome, **kwargs)
+    c = Chromosome(args.chromosome, assembly=assembly, **kwargs)
     start, end = determine_start_end(args.start, args.end)
     print(c.sequence(start, end))
