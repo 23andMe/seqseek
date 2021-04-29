@@ -1,6 +1,7 @@
 import os
 from unittest import TestCase
 
+from seqseek.cli import determine_start_end
 from seqseek.exceptions import TooManyLoops
 from seqseek.chromosome import Chromosome, MissingDataError
 from seqseek.lib import get_data_directory, BUILD37, BUILD37_ACCESSIONS, ACCESSION_LENGTHS, DATA_DIR_VARIABLE
@@ -138,3 +139,34 @@ class TestInvalidQueries(TestCase):
     def test_out_of_range_end_position(self):
         with self.assertRaises(ValueError):
             Chromosome(1).sequence(249250619, 249250622)
+
+
+class TestCLI(TestCase):
+
+    def test_determine_start_end(self):
+        expected = (10000, 10100)
+
+        observed = determine_start_end('10000', '10100')
+        self.assertEqual(observed, expected)
+
+        observed = determine_start_end('10000', '+100')
+        self.assertEqual(observed, expected)
+
+        observed = determine_start_end('-100', '10100')
+        self.assertEqual(observed, expected)
+
+    def test_determine_start_end_cannot_both_relative(self):
+        with self.assertRaises(ValueError):
+            determine_start_end('-100', '+100')
+
+    def test_determine_start_end_non_integer(self):
+        with self.assertRaises(ValueError):
+            determine_start_end('foo', '10100')
+        with self.assertRaises(ValueError):
+            determine_start_end('10000', 'bar')
+        with self.assertRaises(ValueError):
+            determine_start_end('-foo', '10100')
+        with self.assertRaises(ValueError):
+            determine_start_end('10000', '+bar')
+        with self.assertRaises(ValueError):
+            determine_start_end('foo', 'bar')
