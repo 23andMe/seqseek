@@ -1,4 +1,4 @@
-SeqSeek [![Build Status](https://travis-ci.org/23andMe/seqseek.svg?branch=master)](https://travis-ci.org/23andMe/seqseek)
+SeqSeek [![Tests](https://github.com/23andMe/seqseek/actions/workflows/run-tests.yml/badge.svg)](https://github.com/23andMe/seqseek/actions/workflows/run-tests.yml)
 =================
 Easy access to human reference genome sequences.
 
