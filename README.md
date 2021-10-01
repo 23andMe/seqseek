@@ -1,4 +1,4 @@
-SeqSeek [![Build Status](https://travis-ci.org/23andMe/seqseek.svg?branch=master)](https://travis-ci.org/23andMe/seqseek)
+SeqSeek [![Tests](https://github.com/23andMe/seqseek/actions/workflows/run-tests.yml/badge.svg)](https://github.com/23andMe/seqseek/actions/workflows/run-tests.yml)
 =================
 Easy access to human reference genome sequences.
 
@@ -7,7 +7,7 @@ ranges of sequence strings. It is exactly as fast as your disk, for better or wo
 
 Requirements
 ------------
-* Python 2.7+ or Python 3.4+
+* Python 3.6+
 
 Install
 -------
