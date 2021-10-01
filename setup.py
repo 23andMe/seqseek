@@ -6,22 +6,14 @@ from setuptools import setup, find_packages
 PY2 = sys.version_info[0] == 2
 PY3 = sys.version_info[0] == 3
 
-if PY2:
-    readme = open('README.md').read()
-    license = open('LICENSE').read()
-elif PY3:
-    readme = open('README.md', encoding='utf-8').read()
-    license = open('LICENSE', encoding='utf-8').read()
-
 setup(
     name='seqseek',
-    version='0.4.1',
+    version='0.4.2',
     url='https://github.com/23andMe/seqseek',
     download_url='https://github.com/23andMe/seqseek/tarball/0.4.1',
     author='23andMe Engineering',
-    author_email=['mstrand@23andme.com'],
+    author_email='mstrand@23andme.com',
     description='Easy access to human genome reference sequences',
-    long_description=readme,
     entry_points={'console_scripts': [
             'download_build_37 = seqseek.downloader:cmd_line',
             'download_build_38 = seqseek.downloader:cmd_line',
